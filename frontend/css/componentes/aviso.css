@@ -1,0 +1,213 @@
+/*
+ * aviso.css — camada «componentes».
+ * Três formas de dar uma mensagem:
+ *   .aviso         — caixa dentro da página (info, sucesso, aviso, erro)
+ *   .aviso--faixa  — faixa larga no topo (ex.: «farmácia só de leitura»)
+ *   .notificacao   — mensagem flutuante (toast) que fecha sozinha
+ * E o estado vazio desenhado (.estado-vazio).
+ */
+.aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espaco-3);
+  padding: var(--espaco-4);
+  border: var(--borda-fina) solid var(--cor-estado);
+  border-radius: var(--raio-medio);
+  background: var(--cor-estado-suave);
+  color: var(--cor-texto);
+  /* Cor por omissão: informação, na cor principal. */
+  --cor-estado: var(--cor-primaria);
+  --cor-estado-suave: var(--cor-primaria-suave);
+}
+
+.aviso__icone {
+  flex-shrink: 0;
+  color: var(--cor-estado);
+}
+
+.aviso__corpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  min-width: 0;
+}
+
+.aviso__titulo {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-titulo);
+}
+
+.aviso__texto {
+  font-size: var(--texto-pequeno);
+}
+
+.aviso__accoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-2);
+  margin-top: var(--espaco-2);
+}
+
+.aviso--sucesso {
+  --cor-estado: var(--cor-sucesso);
+  --cor-estado-suave: var(--cor-sucesso-suave);
+}
+
+.aviso--aviso {
+  --cor-estado: var(--cor-aviso);
+  --cor-estado-suave: var(--cor-aviso-suave);
+}
+
+.aviso--erro {
+  --cor-estado: var(--cor-erro);
+  --cor-estado-suave: var(--cor-erro-suave);
+}
+
+.aviso--neutro {
+  --cor-estado: var(--cor-neutra);
+  --cor-estado-suave: var(--cor-neutra-suave);
+}
+
+/* Faixa do topo: ocupa a largura toda e não tem cantos redondos no telemóvel. */
+.aviso--faixa {
+  border-width: 0 0 var(--borda-fina);
+  border-radius: 0;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .aviso--faixa {
+    border-width: var(--borda-fina);
+    border-radius: var(--raio-medio);
+  }
+}
+
+/* ======================================================================
+   Notificações flutuantes (toasts)
+   ====================================================================== */
+.notificacoes {
+  position: fixed;
+  z-index: var(--camada-notificacao);
+  left: var(--espaco-4);
+  right: var(--espaco-4);
+  /* No telemóvel fica acima da barra inferior e da zona segura do ecrã. */
+  bottom: calc(
+    var(--altura-barra-inferior) + env(safe-area-inset-bottom) + var(--espaco-3)
+  );
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: var(--espaco-2);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .notificacoes {
+    left: auto;
+    right: var(--espaco-6);
+    bottom: var(--espaco-6);
+    align-items: flex-end;
+  }
+}
+
+.notificacao {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  width: 100%;
+  max-width: 26rem;
+  padding: var(--espaco-3) var(--espaco-3) var(--espaco-3) var(--espaco-4);
+  border-radius: var(--raio-medio);
+  background: var(--cor-texto);
+  color: var(--cor-fundo);
+  box-shadow: var(--sombra-3);
+  font-weight: var(--peso-medio);
+  pointer-events: auto;
+  animation: notificacao-entrar var(--duracao-normal) var(--curva-entrada) both;
+  --cor-estado: var(--cor-primaria-forte);
+}
+
+.notificacao--sucesso {
+  --cor-estado: var(--cor-sucesso);
+}
+
+.notificacao--erro {
+  --cor-estado: var(--cor-erro);
+}
+
+/* O fundo da notificação é «invertido» (escuro no modo claro e vice-versa)
+   para se destacar de tudo; o ícone vai num círculo com a cor de estado. */
+.notificacao__icone {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: var(--espaco-7);
+  height: var(--espaco-7);
+  border-radius: var(--raio-total);
+  background: var(--cor-estado);
+  color: var(--cor-fundo);
+}
+
+.notificacao__texto {
+  flex: 1;
+  min-width: 0;
+}
+
+.notificacao__fechar {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: var(--alvo-toque);
+  height: var(--alvo-toque);
+  border: 0;
+  border-radius: var(--raio-total);
+  background: transparent;
+  color: inherit;
+  opacity: 0.75;
+}
+
+.notificacao__fechar:hover {
+  opacity: 1;
+}
+
+.notificacao--a-sair {
+  animation: desvanecer-saida var(--duracao-normal) var(--curva-suave) forwards;
+}
+
+/* ======================================================================
+   Estado vazio
+   ====================================================================== */
+.estado-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espaco-3);
+  padding: var(--espaco-10) var(--espaco-4);
+  text-align: center;
+  color: var(--cor-texto-suave);
+}
+
+.estado-vazio__ilustracao {
+  width: 8rem;
+  height: 8rem;
+  color: var(--cor-primaria);
+}
+
+.estado-vazio__titulo {
+  font-size: var(--texto-medio);
+  color: var(--cor-texto);
+}
+
+.estado-vazio__texto {
+  max-width: 32ch;
+}
+
+/* Peças da ilustração SVG: o fundo usa a cor suave do tema. */
+.ilustracao__fundo {
+  fill: var(--cor-primaria-suave);
+}
+
+.ilustracao__peca {
+  fill: var(--cor-superficie);
+}

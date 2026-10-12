@@ -1,0 +1,269 @@
+/*
+ * navegacao.css — camada «layout».
+ * Cabeçalho fixo com efeito de vidro, marca FarmaRede e menu das páginas.
+ * O mesmo menu (.menu) tem duas formas, só por CSS:
+ *   < 768 px  → barra inferior fixa com ícone e rótulo, como numa app;
+ *   ≥ 768 px  → menu de topo, dentro do cabeçalho.
+ * A sombra do cabeçalho só aparece depois de rolar (data-rolado="true").
+ */
+
+/* Ligação «Saltar para o conteúdo»: invisível até receber foco pelo teclado. */
+.saltar {
+  position: absolute;
+  top: var(--espaco-2);
+  left: var(--espaco-2);
+  z-index: calc(var(--camada-cabecalho) + 1);
+  padding: var(--espaco-2) var(--espaco-4);
+  border-radius: var(--raio-medio);
+  background: var(--cor-primaria);
+  color: var(--cor-sobre-primaria);
+  font-weight: var(--peso-forte);
+  transform: translateY(-200%);
+}
+
+.saltar:focus {
+  transform: none;
+}
+
+/* Lugar reservado no HTML para o cabeçalho: evita que a página «salte» quando o JS o desenha. */
+.cabecalho-lugar {
+  height: var(--altura-cabecalho);
+}
+
+.cabecalho {
+  position: sticky;
+  top: 0;
+  z-index: var(--camada-cabecalho);
+  border-bottom: var(--borda-fina) solid transparent;
+  transition:
+    box-shadow var(--duracao-normal) var(--curva-suave),
+    border-color var(--duracao-normal) var(--curva-suave);
+}
+
+/*
+ * O vidro fica num pseudo-elemento e não no próprio cabeçalho: um backdrop-filter
+ * no cabeçalho faria a barra inferior (position: fixed, lá dentro) ficar presa a ele.
+ */
+.cabecalho::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--cor-vidro);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  backdrop-filter: saturate(1.6) blur(14px);
+}
+
+.cabecalho[data-rolado='true'] {
+  border-bottom-color: var(--cor-borda);
+  box-shadow: var(--sombra-2);
+}
+
+.cabecalho__interior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-4);
+  min-height: var(--altura-cabecalho);
+}
+
+/* ---------- Marca (logótipo + nome) ---------- */
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-height: var(--alvo-toque);
+  color: var(--cor-texto);
+  font-weight: var(--peso-extra);
+  font-size: var(--texto-medio);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.marca:hover {
+  color: var(--cor-texto);
+}
+
+.marca__simbolo {
+  display: grid;
+  place-items: center;
+  width: var(--espaco-9);
+  height: var(--espaco-9);
+  border-radius: var(--raio-medio);
+  background: var(--cor-primaria);
+  color: var(--cor-sobre-primaria);
+  box-shadow: var(--sombra-1);
+}
+
+.marca__realce {
+  color: var(--cor-primaria);
+}
+
+/* ======================================================================
+   Menu — telemóvel: barra inferior fixa
+   ====================================================================== */
+.menu {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: var(--camada-cabecalho);
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: var(--borda-fina) solid var(--cor-borda);
+  background: var(--cor-vidro);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  backdrop-filter: saturate(1.6) blur(14px);
+}
+
+.menu__lista {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu__ligacao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espaco-1);
+  min-height: var(--altura-barra-inferior);
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-micro);
+  font-weight: var(--peso-forte);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--duracao-rapida) var(--curva-suave);
+}
+
+.menu__ligacao:hover {
+  color: var(--cor-texto);
+}
+
+/* «Sair» é um botão, não uma ligação: tira-lhe o aspecto de botão do navegador. */
+button.menu__ligacao {
+  width: 100%;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* Nome de quem tem sessão iniciada: só a partir do tablet. */
+.cabecalho__utilizador {
+  display: none;
+}
+
+/* Cápsula atrás do ícone: aparece na página actual. */
+.menu__icone {
+  display: grid;
+  place-items: center;
+  width: var(--espaco-12);
+  height: var(--espaco-7);
+  border-radius: var(--raio-total);
+  transition:
+    background-color var(--duracao-normal) var(--curva-suave),
+    transform var(--duracao-rapida) var(--curva-suave);
+}
+
+.menu__ligacao:active .menu__icone {
+  transform: scale(0.94);
+}
+
+.menu__ligacao[aria-current='page'] {
+  color: var(--cor-primaria);
+}
+
+.menu__ligacao[aria-current='page'] .menu__icone {
+  background: var(--cor-primaria-suave);
+}
+
+/* A barra inferior tapa o fim da página: reserva-lhe espaço. */
+@media (max-width: 767.98px) {
+  body {
+    padding-bottom: calc(var(--altura-barra-inferior) + env(safe-area-inset-bottom));
+  }
+}
+
+/* ======================================================================
+   Menu — tablet e maior: dentro do cabeçalho
+   ====================================================================== */
+@media (min-width: 768px) {
+  .menu {
+    position: static;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .menu__lista {
+    display: flex;
+    gap: var(--espaco-1);
+  }
+
+  button.menu__ligacao {
+    width: auto;
+  }
+
+  .cabecalho__utilizador {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espaco-2);
+    min-height: var(--espaco-9);
+    padding-inline: var(--espaco-3);
+    border: var(--borda-fina) solid var(--cor-borda);
+    border-radius: var(--raio-total);
+    background: var(--cor-superficie);
+    font-size: var(--texto-pequeno);
+    font-weight: var(--peso-forte);
+  }
+
+  .cabecalho__utilizador .icone {
+    color: var(--cor-primaria);
+  }
+
+  .menu__ligacao {
+    position: relative;
+    flex-direction: row;
+    gap: var(--espaco-2);
+    min-height: var(--alvo-toque);
+    padding-inline: var(--espaco-3);
+    border-radius: var(--raio-medio);
+    font-size: var(--texto-pequeno);
+  }
+
+  .menu__ligacao:hover {
+    background: var(--cor-superficie-2);
+  }
+
+  .menu__icone,
+  .menu__ligacao[aria-current='page'] .menu__icone {
+    width: auto;
+    height: auto;
+    background: none;
+  }
+
+  /* Página actual: texto na cor principal e um traço curto por baixo. */
+  .menu__ligacao::after {
+    content: '';
+    position: absolute;
+    left: var(--espaco-3);
+    right: var(--espaco-3);
+    bottom: var(--espaco-1);
+    height: var(--borda-grossa);
+    border-radius: var(--raio-total);
+    background: var(--cor-primaria);
+    opacity: 0;
+    transform: scaleX(0.4);
+    transition:
+      opacity var(--duracao-normal) var(--curva-suave),
+      transform var(--duracao-normal) var(--curva-suave);
+  }
+
+  .menu__ligacao[aria-current='page']::after {
+    opacity: 1;
+    transform: none;
+  }
+}

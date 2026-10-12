@@ -1,0 +1,204 @@
+/*
+ * tokens.css — camada «tokens».
+ * Todas as decisões de design (cores, tipografia, espaços, raios, sombras, movimento)
+ * vivem aqui como variáveis CSS. O resto do CSS só usa estas variáveis.
+ * O modo escuro redefine as cores em :root[data-tema='escuro'];
+ * o atributo data-tema é posto no <html> pelo pequeno script do <head> de cada página.
+ */
+:root {
+  color-scheme: light;
+
+  /* ---------- Cores (modo claro) ---------- */
+  --cor-fundo: #f3f6f7;
+  --cor-superficie: #ffffff;
+  --cor-superficie-2: #edf2f4; /* fundo de zonas recolhidas, esqueletos, linhas */
+  --cor-texto: #0f1d22;
+  --cor-texto-suave: #4b5c63;
+  --cor-borda: #dbe3e7;
+  --cor-borda-forte: #b9c6cc;
+  --cor-borda-campo: #7d8e97; /* contorno de campos: ≥ 3:1 com o fundo (WCAG 1.4.11) */
+
+  --cor-primaria: #0f766e;
+  --cor-primaria-forte: #115e59;
+  --cor-primaria-suave: #e0f2f0;
+  --cor-sobre-primaria: #ffffff;
+
+  --cor-sucesso: #15803d;
+  --cor-sucesso-suave: #dcfce7;
+  --cor-aviso: #b45309;
+  --cor-aviso-suave: #fef3c7;
+  --cor-erro: #b91c1c;
+  --cor-erro-suave: #fee2e2;
+  --cor-sobre-erro: #ffffff;
+  --cor-neutra: #556270;
+  --cor-neutra-suave: #e9eef2;
+
+  --cor-foco: var(--cor-primaria);
+  --cor-anel: rgb(15 118 110 / 0.22); /* anel à volta de campos com foco */
+  --cor-sobreposicao: rgb(8 20 24 / 0.5); /* fundo escurecido do modal */
+  --cor-vidro: rgb(255 255 255 / 0.72); /* cabeçalho com efeito de vidro */
+  --cor-brilho: rgb(255 255 255 / 0.55); /* reflexo dos esqueletos */
+  --cor-reflexo: rgb(255 255 255 / 0.9); /* linha de luz no topo dos cartões */
+  --cor-trama: rgb(15 29 34 / 0.12); /* pontos decorativos dos cartões */
+  --gradiente-fundo: radial-gradient(
+    60rem 24rem at 50% -8rem,
+    var(--cor-primaria-suave),
+    transparent 70%
+  );
+
+  /* ---------- Tipografia ---------- */
+  --fonte-base: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --fonte-numeros: var(--fonte-base);
+
+  --texto-micro: 0.75rem; /* sobretítulos em maiúsculas */
+  --texto-pequeno: 0.875rem;
+  --texto-base: 1rem;
+  --texto-medio: 1.125rem;
+  --texto-grande: clamp(1.2rem, 1.05rem + 0.6vw, 1.45rem);
+  --texto-titulo: clamp(1.6rem, 1.2rem + 2vw, 2.4rem);
+  --texto-destaque: clamp(2rem, 1.3rem + 3.2vw, 3.25rem);
+  --texto-numero: clamp(2.25rem, 1.8rem + 2vw, 3rem);
+
+  --peso-normal: 400;
+  --peso-medio: 500;
+  --peso-forte: 600;
+  --peso-titulo: 700;
+  --peso-extra: 800;
+
+  --altura-linha-apertada: 1.15;
+  --altura-linha-normal: 1.5;
+
+  /* ---------- Espaçamento (escala de 4 px) ---------- */
+  --espaco-half: 0.125rem; /* 2 px */
+  --espaco-1: 0.25rem; /* 4 px */
+  --espaco-2: 0.5rem; /* 8 px */
+  --espaco-3: 0.75rem; /* 12 px */
+  --espaco-4: 1rem; /* 16 px */
+  --espaco-5: 1.25rem; /* 20 px */
+  --espaco-6: 1.5rem; /* 24 px */
+  --espaco-7: 1.75rem; /* 28 px */
+  --espaco-8: 2rem; /* 32 px */
+  --espaco-9: 2.25rem; /* 36 px */
+  --espaco-10: 2.5rem; /* 40 px */
+  --espaco-11: 2.75rem; /* 44 px */
+  --espaco-12: 3rem; /* 48 px */
+  --espaco-16: 4rem; /* 64 px — só entre grandes secções */
+
+  /* ---------- Medidas ---------- */
+  --largura-maxima: 75rem; /* 1200 px */
+  --largura-texto: 40rem; /* linhas de texto confortáveis */
+  --alvo-toque: 2.75rem; /* 44 px: mínimo para tocar com o dedo */
+  --altura-cabecalho: 4rem;
+  --altura-barra-inferior: 4rem;
+  --borda-fina: 1px;
+  --borda-grossa: 2px;
+  --largura-foco: 3px;
+  --largura-anel: 4px; /* anel de cor à volta dos campos com foco */
+  --largura-acento: 4px; /* barra de cor à esquerda dos cartões */
+  --tamanho-ponto: 0.625rem; /* ponto «vivo» dos nós */
+
+  /* ---------- Raios ---------- */
+  --raio-minimo: 3px; /* indicador de estado quadrado */
+  --raio-pequeno: 8px;
+  --raio-medio: 12px; /* botões e campos */
+  --raio-grande: 16px; /* cartões */
+  --raio-total: 999px; /* pílulas e círculos */
+
+  /* ---------- Sombras (em camadas, suaves) ---------- */
+  --sombra-1: 0 1px 2px rgb(15 29 34 / 0.06), 0 1px 3px rgb(15 29 34 / 0.08);
+  --sombra-2: 0 2px 4px rgb(15 29 34 / 0.06), 0 6px 16px rgb(15 29 34 / 0.08);
+  --sombra-3: 0 4px 8px rgb(15 29 34 / 0.08), 0 16px 40px rgb(15 29 34 / 0.14);
+
+  /* ---------- Movimento ---------- */
+  --duracao-rapida: 120ms;
+  --duracao-normal: 220ms;
+  --duracao-lenta: 400ms;
+  --duracao-abanar: 300ms;
+  --duracao-grafico: 300ms; /* actualização dos gráficos (Chart.js) */
+  --duracao-desvanecer: 1s; /* fundo verde de linha gravada */
+  --duracao-brilho: 1.2s; /* ciclo do esqueleto */
+  --duracao-pulsar: 2s; /* ciclo do ponto «vivo» */
+  --duracao-girar: 700ms; /* círculo de carregamento dos botões */
+  --duracao-notificacao: 4s; /* tempo até a notificação fechar sozinha */
+  --intervalo-cascata: 60ms;
+  --curva-suave: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --curva-entrada: cubic-bezier(0.16, 1, 0.3, 1);
+  --distancia-entrada: 8px;
+
+  /* ---------- Camadas de empilhamento (z-index) ---------- */
+  --camada-cabecalho: 50;
+  --camada-notificacao: 80;
+  --camada-modal: 100;
+}
+
+/* ---------- Modo escuro ---------- */
+:root[data-tema='escuro'] {
+  color-scheme: dark;
+
+  --cor-fundo: #0b1316;
+  --cor-superficie: #121c20;
+  --cor-superficie-2: #1a262b;
+  --cor-texto: #e6eef0;
+  --cor-texto-suave: #a1b2b8;
+  --cor-borda: #26363c;
+  --cor-borda-forte: #3a4c53;
+  --cor-borda-campo: #5b6f78;
+
+  --cor-primaria: #2dd4bf;
+  --cor-primaria-forte: #5eead4;
+  --cor-primaria-suave: #10302d;
+  --cor-sobre-primaria: #042420;
+
+  --cor-sucesso: #4ade80;
+  --cor-sucesso-suave: #10301c;
+  --cor-aviso: #fbbf24;
+  --cor-aviso-suave: #33270b;
+  --cor-erro: #f87171;
+  --cor-erro-suave: #3a1616;
+  --cor-sobre-erro: #2a0606;
+  --cor-neutra: #9aa9b6;
+  --cor-neutra-suave: #1f2b31;
+
+  --cor-anel: rgb(45 212 191 / 0.28);
+  --cor-sobreposicao: rgb(0 0 0 / 0.62);
+  --cor-vidro: rgb(18 28 32 / 0.72);
+  --cor-brilho: rgb(255 255 255 / 0.06);
+  --cor-reflexo: rgb(255 255 255 / 0.05);
+  --cor-trama: rgb(255 255 255 / 0.08);
+
+  --sombra-1: 0 1px 2px rgb(0 0 0 / 0.4), 0 1px 3px rgb(0 0 0 / 0.3);
+  --sombra-2: 0 2px 4px rgb(0 0 0 / 0.35), 0 6px 16px rgb(0 0 0 / 0.35);
+  --sombra-3: 0 4px 8px rgb(0 0 0 / 0.4), 0 16px 40px rgb(0 0 0 / 0.5);
+}
+
+/*
+ * Mapa de estados: a mesma palavra tem sempre a mesma cor em todo o site.
+ * Qualquer elemento com data-estado recebe --cor-estado e --cor-estado-suave,
+ * que os componentes usam para pontos, barras e ícones.
+ */
+[data-estado='vivo'],
+[data-estado='disponivel'],
+[data-estado='lider'],
+[data-estado='gravado'] {
+  --cor-estado: var(--cor-sucesso);
+  --cor-estado-suave: var(--cor-sucesso-suave);
+}
+
+[data-estado='replica'],
+[data-estado='lento'] {
+  --cor-estado: var(--cor-aviso);
+  --cor-estado-suave: var(--cor-aviso-suave);
+}
+
+[data-estado='indisponivel'] {
+  --cor-estado: var(--cor-neutra);
+  --cor-estado-suave: var(--cor-neutra-suave);
+}
+
+[data-estado='sem-stock'],
+[data-estado='erro'],
+[data-estado='conflito'] {
+  --cor-estado: var(--cor-erro);
+  --cor-estado-suave: var(--cor-erro-suave);
+}

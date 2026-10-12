@@ -1,0 +1,171 @@
+/*
+ * pesquisa.css — camada «paginas».
+ * Zona de destaque da página inicial (título, campo grande, atalhos)
+ * e a zona de resultados por baixo.
+ */
+/* Tudo na camada «paginas» (a ordem das camadas está declarada em main.css). */
+@layer paginas {
+
+.destaque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espaco-4);
+  padding-top: var(--espaco-6);
+  text-align: center;
+}
+
+/* A rede das três farmácias (A — B — C) como assinatura por cima do título. */
+.destaque__rede {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  max-width: 100%;
+  padding: var(--espaco-1) var(--espaco-4) var(--espaco-1) var(--espaco-1);
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-total);
+  background: var(--cor-superficie);
+  box-shadow: var(--sombra-1);
+}
+
+/* Telemóvel estreito: letras menos espaçadas; se mesmo assim não couber, passa de linha. */
+.destaque__rede .sobretitulo {
+  min-width: 0;
+  letter-spacing: 0.06em;
+  text-align: left;
+}
+
+.destaque__rede .rota__no {
+  width: var(--espaco-6);
+  height: var(--espaco-6);
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+  background: var(--cor-primaria-suave);
+}
+
+.destaque__rede .rota__ligacao {
+  width: var(--espaco-2);
+  border-top-style: solid;
+  border-top-color: var(--cor-primaria);
+}
+
+.destaque__titulo {
+  font-size: var(--texto-destaque);
+  font-weight: var(--peso-extra);
+  letter-spacing: -0.035em;
+  max-width: 16ch;
+}
+
+.destaque__subtitulo {
+  max-width: var(--largura-texto);
+  font-size: var(--texto-medio);
+  color: var(--cor-texto-suave);
+}
+
+.destaque__pesquisa {
+  width: 100%;
+  max-width: 44rem;
+  margin-top: var(--espaco-2);
+}
+
+.destaque__atalhos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--espaco-2);
+}
+
+.destaque__atalhos-rotulo {
+  margin-right: var(--espaco-1);
+}
+
+/* ---------- Resultados ---------- */
+.resultados {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+}
+
+/* O que o JS desenha lá dentro (cabeçalho, cartões, resumo) fica espaçado por igual. */
+.resultados__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+}
+
+.resultados__cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espaco-2) var(--espaco-4);
+}
+
+.resultados__titulo {
+  margin-top: var(--espaco-1);
+  font-size: var(--texto-grande);
+}
+
+.resultados__detalhe {
+  font-weight: var(--peso-medio);
+  color: var(--cor-texto-suave);
+}
+
+/* «Disponível em 2 de 3 farmácias»: o número em destaque. */
+.resultados__contagem {
+  font-size: var(--texto-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+.resultados__contagem strong {
+  font-size: var(--texto-medio);
+  color: var(--cor-texto);
+  font-variant-numeric: tabular-nums;
+}
+
+.resultados__resumo .icone {
+  color: var(--cor-primaria);
+}
+
+.resultados__separador {
+  color: var(--cor-borda-forte);
+}
+
+.resultados__resumo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espaco-2);
+  font-size: var(--texto-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+@media (min-width: 400px) {
+  .destaque__rede {
+    gap: var(--espaco-3);
+  }
+
+  .destaque__rede .sobretitulo {
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+
+  .destaque__rede .rota__ligacao {
+    width: var(--espaco-3);
+  }
+}
+
+@media (min-width: 768px) {
+  .destaque {
+    padding-top: var(--espaco-12);
+    gap: var(--espaco-5);
+  }
+}
+
+/* Zonas ainda vazias (ex.: sem avisos) não ocupam espaço nem criam intervalos. */
+.resultados > :empty {
+  display: none;
+}
+
+} /* fim de @layer paginas */

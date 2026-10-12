@@ -1,0 +1,326 @@
+/*
+ * painel.css — camada «paginas».
+ * Grelha do painel em tempo real:
+ *   telemóvel → tudo numa coluna;
+ *   tablet    → nós em 3 colunas, gráficos em 2;
+ *   portátil  → nós em cima; gráficos, números e listas lado a lado.
+ */
+/* Tudo na camada «paginas» (a ordem das camadas está declarada em main.css). */
+@layer paginas {
+
+.painel__cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+/* Pílula «Ao vivo» com o ponto a pulsar. */
+.painel__ao-vivo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  align-self: flex-start;
+  padding: var(--espaco-1) var(--espaco-3);
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-total);
+  background: var(--cor-superficie);
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-forte);
+}
+
+.painel__nos {
+  display: grid;
+  gap: var(--espaco-4);
+  grid-template-columns: 1fr;
+}
+
+.painel__grelha {
+  display: grid;
+  gap: var(--espaco-4);
+  grid-template-columns: 1fr;
+}
+
+.painel__bloco {
+  gap: var(--espaco-4);
+}
+
+.painel__bloco-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espaco-2);
+}
+
+.painel__bloco-titulo {
+  font-size: var(--texto-medio);
+}
+
+/* Espaço fixo para os gráficos: a página não salta quando o Chart.js desenha. */
+.painel__tela {
+  position: relative;
+  height: 15rem;
+}
+
+.painel__tela > .esqueleto {
+  height: 100%;
+}
+
+.painel__metricas {
+  display: grid;
+  gap: var(--espaco-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.painel__lista-esqueleto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+/* ---------- Gráficos ---------- */
+.grafico {
+  position: relative;
+  height: 100%;
+}
+
+.grafico__sem-biblioteca {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  border: var(--borda-fina) dashed var(--cor-borda-forte);
+  border-radius: var(--raio-medio);
+  font-size: var(--texto-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Mais pesquisados (barras só em CSS) ---------- */
+.ranking {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: posicao;
+}
+
+.ranking__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--espaco-1) var(--espaco-3);
+  counter-increment: posicao;
+}
+
+/* Número da posição (1, 2, 3…) num pequeno mosaico. */
+.ranking__item::before {
+  content: counter(posicao);
+  display: grid;
+  place-items: center;
+  width: var(--espaco-6);
+  height: var(--espaco-6);
+  border-radius: var(--raio-pequeno);
+  background: var(--cor-superficie-2);
+  font-size: var(--texto-micro);
+  font-weight: var(--peso-extra);
+  color: var(--cor-texto-suave);
+}
+
+.ranking__nome {
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-forte);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking__total {
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-titulo);
+  font-variant-numeric: tabular-nums;
+}
+
+.ranking__pista {
+  grid-column: 2 / -1;
+  height: var(--espaco-2);
+  border-radius: var(--raio-total);
+  background: var(--cor-superficie-2);
+  overflow: hidden;
+}
+
+/* A barra é sempre 100 % e encolhe com transform (anima sem mexer no layout). */
+.ranking__barra {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--cor-primaria);
+  transform: scaleX(var(--proporcao, 0));
+  transform-origin: left center;
+  transition: transform var(--duracao-lenta) var(--curva-suave);
+}
+
+.painel__vazio {
+  font-size: var(--texto-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Controlo de falhas (admin) ---------- */
+.falhas {
+  display: grid;
+  gap: var(--espaco-4);
+  grid-template-columns: 1fr;
+}
+
+.falhas__no {
+  gap: var(--espaco-3);
+}
+
+.falhas__no-titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  font-size: var(--texto-medio);
+}
+
+.falhas__geral {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espaco-4);
+}
+
+.falhas__geral .campo {
+  min-width: min(100%, 16rem);
+}
+
+/* ---------- Últimos eventos ---------- */
+.eventos {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.evento {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--espaco-3);
+  padding-block: var(--espaco-3);
+  border-top: var(--borda-fina) solid var(--cor-borda);
+}
+
+.evento:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.evento__hora {
+  padding-top: var(--espaco-1);
+  font-size: var(--texto-pequeno);
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-texto-suave);
+}
+
+/* Letra do nó num pequeno mosaico, igual ao do cartão de nó. */
+.evento__no {
+  display: grid;
+  place-items: center;
+  width: var(--espaco-7);
+  height: var(--espaco-7);
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  background: var(--cor-superficie-2);
+  font-size: var(--texto-micro);
+  font-weight: var(--peso-extra);
+}
+
+.evento__corpo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espaco-1) var(--espaco-2);
+  min-width: 0;
+  padding-top: var(--espaco-half);
+  font-size: var(--texto-pequeno);
+}
+
+.evento__detalhe {
+  color: var(--cor-texto-suave);
+}
+
+.painel__eventos-vazio {
+  font-size: var(--texto-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+/* A lista pode ter 20 eventos: no portátil rola por dentro do cartão. */
+@media (min-width: 1024px) {
+  .painel__bloco--eventos .eventos {
+    max-height: 22rem;
+    overflow-y: auto;
+    padding-right: var(--espaco-2);
+  }
+}
+
+@media (min-width: 768px) {
+  .falhas {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .painel__nos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--espaco-5);
+  }
+
+  .painel__grelha {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--espaco-5);
+  }
+
+  .painel__metricas,
+  .painel__bloco--largo {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .painel__cabecalho {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .painel__ao-vivo {
+    align-self: auto;
+  }
+
+  /* 12 colunas: pedidos (5) · latência (7) / números (4) · mais pesquisados (4) · eventos (4). */
+  .painel__grelha {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .painel__bloco--pedidos {
+    grid-column: span 5;
+  }
+
+  .painel__bloco--latencia {
+    grid-column: span 7;
+  }
+
+  .painel__metricas {
+    grid-column: span 4;
+    grid-template-columns: 1fr;
+  }
+
+  .painel__bloco--pesquisados,
+  .painel__bloco--eventos {
+    grid-column: span 4;
+  }
+}
+
+} /* fim de @layer paginas */

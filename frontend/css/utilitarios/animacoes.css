@@ -1,0 +1,170 @@
+/*
+ * animacoes.css — camada «utilitarios» (a última: ganha a todas as outras).
+ * Todos os @keyframes do site, as classes de movimento (.anim-*) e as regras
+ * para quem pediu ao sistema para reduzir o movimento.
+ * Regra de ouro: animar só transform e opacity (as cores podem ter transição).
+ */
+
+/* ---------- Keyframes ---------- */
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(var(--distancia-entrada));
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes desvanecer-saida {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes notificacao-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(var(--espaco-4));
+  }
+}
+
+@keyframes modal-entrar {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes brilho-deslizar {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulsar {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@keyframes brilho-borda {
+  35% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes abanar {
+  20%,
+  60% {
+    transform: translateX(calc(var(--espaco-2) * -1));
+  }
+  40%,
+  80% {
+    transform: translateX(var(--espaco-2));
+  }
+}
+
+/* Excepção à regra: é uma animação de cor (fundo verde da linha gravada). */
+@keyframes desvanecer-sucesso {
+  from {
+    background-color: var(--cor-sucesso-suave);
+  }
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* ---------- Classes de movimento ---------- */
+
+/* Entrada de página e de cartões. --atraso é posto por animar.js para a cascata. */
+.anim-entrar {
+  animation: entrar var(--duracao-normal) var(--curva-entrada) both;
+  animation-delay: var(--atraso, 0ms);
+}
+
+.anim-aparecer {
+  animation: aparecer var(--duracao-normal) var(--curva-suave) both;
+}
+
+/* Abanão horizontal, uma só vez (aviso 409, login errado). */
+.anim-abanar {
+  animation: abanar var(--duracao-abanar) var(--curva-suave);
+}
+
+/* ---------- Transições entre páginas (View Transitions API) ---------- */
+/* A regra @view-transition que liga esta funcionalidade está em main.css. */
+::view-transition-old(root) {
+  animation: desvanecer-saida var(--duracao-rapida) var(--curva-suave) both;
+}
+
+/* Só um desvanecimento: o <main> de cada página já faz a sua própria entrada (subir 8 px). */
+::view-transition-new(root) {
+  animation: aparecer var(--duracao-normal) var(--curva-suave) both;
+}
+
+/* ---------- Reduzir movimento ---------- */
+/*
+ * Sem ciclos (pulsar, brilho, girar), sem deslocamentos nem abanões.
+ * As entradas passam a um desvanecimento curto, que não distrai.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .anim-entrar,
+  ::view-transition-new(root) {
+    animation-name: aparecer;
+    animation-delay: 0ms;
+  }
+
+  .anim-abanar,
+  .esqueleto::after,
+  .ponto-estado::after,
+  .botao[aria-busy='true']::after {
+    animation: none;
+  }
+
+  .botao,
+  .chip,
+  .campo-pesquisa__botao {
+    transition-property: background-color, color, border-color, box-shadow;
+  }
+
+  .botao:not(.campo-pesquisa__botao):hover,
+  .botao:not(.campo-pesquisa__botao):active,
+  .chip:hover,
+  .chip:active {
+    transform: none;
+  }
+
+  /* Este botão usa transform para se centrar dentro do campo: mantém-se. */
+  .campo-pesquisa__botao:hover,
+  .campo-pesquisa__botao:active {
+    transform: translateY(-50%);
+  }
+
+  .notificacao {
+    animation-name: aparecer;
+  }
+
+  .modal[open] {
+    animation-name: aparecer;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}

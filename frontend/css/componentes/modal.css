@@ -1,0 +1,75 @@
+/*
+ * modal.css — camada «componentes».
+ * Caixa de confirmação feita com o elemento nativo <dialog>.
+ * Com dialog.showModal() o navegador já prende o foco lá dentro, torna o resto
+ * da página inerte e fecha com Esc. Aqui só tratamos do aspecto e da entrada:
+ * o fundo escurece e a caixa cresce de 96 % para 100 %.
+ */
+.modal {
+  width: min(100% - 2 * var(--espaco-4), 28rem);
+  max-height: calc(100dvh - 2 * var(--espaco-4));
+  margin: auto;
+  padding: 0;
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-grande);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  box-shadow: var(--sombra-3);
+  overflow: auto;
+}
+
+.modal[open] {
+  animation: modal-entrar var(--duracao-normal) var(--curva-entrada);
+}
+
+.modal::backdrop {
+  background: var(--cor-sobreposicao);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  animation: aparecer var(--duracao-normal) var(--curva-suave);
+}
+
+/* O conteúdo vive numa caixa interior: um clique fora dela (no fundo) fecha o modal. */
+.modal__caixa {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+  padding: var(--espaco-6);
+}
+
+.modal__icone {
+  display: grid;
+  place-items: center;
+  width: var(--espaco-12);
+  height: var(--espaco-12);
+  border-radius: var(--raio-total);
+  background: var(--cor-erro-suave);
+  color: var(--cor-erro);
+}
+
+.modal__titulo {
+  font-size: var(--texto-grande);
+}
+
+.modal__texto {
+  color: var(--cor-texto-suave);
+}
+
+.modal__accoes {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--espaco-2);
+  margin-top: var(--espaco-2);
+}
+
+@media (min-width: 480px) {
+  .modal__accoes {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+/* Impede a página de rolar por trás do modal aberto. */
+html:has(.modal[open]) {
+  overflow: hidden;
+}

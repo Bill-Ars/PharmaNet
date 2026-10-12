@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Painel em tempo real do FarmaRede: estado dos nós A, B e C, pedidos, latência e eventos."
+    />
+    <meta name="theme-color" content="#f3f6f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1316" media="(prefers-color-scheme: dark)" />
+    <title>Painel · FarmaRede</title>
+
+    <!-- Aplica o tema antes de a página aparecer, para não «piscar» em branco no modo escuro. -->
+    <script>
+      {
+        let tema = null;
+        try {
+          tema = localStorage.getItem('farmarede-tema');
+        } catch {}
+        if (!tema) tema = matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+        document.documentElement.dataset.tema = tema;
+      }
+      // Uma transição entre páginas interrompida (ex.: redirecção logo ao abrir) não é um erro.
+      for (const momento of ['pageswap', 'pagereveal']) {
+        addEventListener(momento, (evento) => {
+          const transicao = evento.viewTransition;
+          if (!transicao) return;
+          for (const promessa of [transicao.ready, transicao.finished, transicao.updateCallbackDone]) {
+            promessa?.catch(() => {});
+          }
+        });
+      }
+    </script>
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <!-- A fonte é pedida já, em paralelo com o CSS (ver css/base/tipografia.css). -->
+    <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/paginas/painel.css" />
+    <!-- Chart.js (gráficos). «defer»: corre antes do módulo da página, pela ordem do HTML. -->
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+    <script type="module" src="js/paginas/painel.js"></script>
+  </head>
+
+  <body>
+    <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
+    <!-- A marca aparece logo, sem esperar pelo JS; navegacao.js troca este bloco pelo cabeçalho completo. -->
+    <div id="navegacao" class="cabecalho-lugar">
+      <div class="contentor cabecalho__interior">
+        <a class="marca" href="index.html" aria-label="FarmaRede — página inicial">
+          <span class="marca__simbolo">
+            <svg class="icone" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z"/></svg>
+          </span>
+          <span>Farma<span class="marca__realce">Rede</span></span>
+        </a>
+      </div>
+    </div>
+
+    <main id="conteudo" class="contentor pagina anim-entrar">
+      <header class="painel__cabecalho">
+        <div class="pilha">
+          <p class="sobretitulo">Tempo real · actualiza a cada 2 s</p>
+          <h1>Painel da rede</h1>
+          <p class="texto-suave">
+            Estado dos três nós, pedidos e latência das últimas janelas de 5 segundos.
+          </p>
+        </div>
+        <span class="painel__ao-vivo" data-estado="vivo" id="estado-sondagem">
+          <span class="ponto-estado"></span><span id="texto-sondagem">Ao vivo</span>
+        </span>
+      </header>
+
+      <!-- Nós A, B e C (Fase 7) -->
+      <section class="seccao" aria-labelledby="titulo-nos">
+        <h2 id="titulo-nos">Nós</h2>
+        <div class="painel__nos" id="cartoes-nos" aria-busy="true">
+          <article class="cartao cartao-no" aria-hidden="true">
+            <div class="esqueleto__linha">
+              <span class="esqueleto esqueleto--quadrado"></span>
+              <span class="esqueleto esqueleto--texto esqueleto--curto"></span>
+            </div>
+            <span class="esqueleto esqueleto--texto"></span>
+            <span class="esqueleto esqueleto--texto esqueleto--medio"></span>
+          </article>
+          <article class="cartao cartao-no" aria-hidden="true">
+            <div class="esqueleto__linha">
+              <span class="esqueleto esqueleto--quadrado"></span>
+              <span class="esqueleto esqueleto--texto esqueleto--curto"></span>
+            </div>
+            <span class="esqueleto esqueleto--texto"></span>
+            <span class="esqueleto esqueleto--texto esqueleto--medio"></span>
+          </article>
+          <article class="cartao cartao-no" aria-hidden="true">
+            <div class="esqueleto__linha">
+              <span class="esqueleto esqueleto--quadrado"></span>
+              <span class="esqueleto esqueleto--texto esqueleto--curto"></span>
+            </div>
+            <span class="esqueleto esqueleto--texto"></span>
+            <span class="esqueleto esqueleto--texto esqueleto--medio"></span>
+          </article>
+        </div>
+      </section>
+
+      <!-- Gráficos, números e listas (Fases 7 e 8) -->
+      <div class="painel__grelha">
+        <section class="cartao painel__bloco painel__bloco--pedidos" aria-labelledby="titulo-pedidos">
+          <div class="painel__bloco-cabecalho">
+            <h2 class="painel__bloco-titulo" id="titulo-pedidos">Pedidos por nó</h2>
+            <span class="texto-pequeno texto-suave">última janela</span>
+          </div>
+          <div class="painel__tela" id="grafico-pedidos">
+            <span class="esqueleto" aria-hidden="true"></span>
+          </div>
+        </section>
+
+        <section class="cartao painel__bloco painel__bloco--latencia" aria-labelledby="titulo-latencia">
+          <div class="painel__bloco-cabecalho">
+            <h2 class="painel__bloco-titulo" id="titulo-latencia">Latência — mediana e p95</h2>
+            <span class="texto-pequeno texto-suave">último minuto</span>
+          </div>
+          <div class="painel__tela" id="grafico-latencia">
+            <span class="esqueleto" aria-hidden="true"></span>
+          </div>
+        </section>
+
+        <section class="painel__metricas" aria-label="Números da última janela">
+          <div class="cartao metrica">
+            <p class="metrica__rotulo"><span data-icone="alerta" data-tamanho="16"></span>Conflitos 409</p>
+            <p class="metrica__valor" id="metrica-conflitos">—</p>
+            <p class="metrica__nota">na última janela de 5 s</p>
+          </div>
+          <div class="cartao metrica">
+            <p class="metrica__rotulo"><span data-icone="relogio" data-tamanho="16"></span>Atraso da réplica</p>
+            <p class="metrica__valor"><span id="metrica-atraso">—</span><span class="metrica__unidade">ms</span></p>
+            <p class="metrica__nota">na última janela de 5 s</p>
+          </div>
+        </section>
+
+        <section class="cartao painel__bloco painel__bloco--pesquisados" aria-labelledby="titulo-pesquisados">
+          <h2 class="painel__bloco-titulo" id="titulo-pesquisados">Mais pesquisados</h2>
+          <div class="painel__lista-esqueleto" id="lista-pesquisados" aria-hidden="true">
+            <span class="esqueleto esqueleto--texto"></span>
+            <span class="esqueleto esqueleto--texto esqueleto--medio"></span>
+            <span class="esqueleto esqueleto--texto esqueleto--curto"></span>
+          </div>
+        </section>
+
+        <section
+          class="cartao painel__bloco painel__bloco--eventos painel__bloco--largo"
+          aria-labelledby="titulo-eventos"
+        >
+          <h2 class="painel__bloco-titulo" id="titulo-eventos">Últimos eventos</h2>
+          <div class="painel__lista-esqueleto" id="lista-eventos" aria-hidden="true">
+            <span class="esqueleto esqueleto--texto"></span>
+            <span class="esqueleto esqueleto--texto esqueleto--medio"></span>
+            <span class="esqueleto esqueleto--texto"></span>
+          </div>
+        </section>
+      </div>
+
+      <!-- Frase curta lida pelo leitor de ecrã quando um nó muda de estado. -->
+      <p class="visualmente-oculto" id="anuncio" role="status" aria-live="polite"></p>
+
+      <!-- Controlo de falhas: só aparece com sessão de admin (Fase 8) -->
+      <section class="seccao" id="controlo-falhas" aria-labelledby="titulo-falhas" hidden>
+        <div class="seccao__cabecalho">
+          <div>
+            <p class="sobretitulo">Administração</p>
+            <h2 id="titulo-falhas">Controlo de falhas</h2>
+          </div>
+          <p class="seccao__subtitulo">Simule falhas para ver a rede a reagir: o painel e a pesquisa mudam em poucos segundos.</p>
+        </div>
+        <div class="falhas" id="falhas-nos"></div>
+        <div class="cartao falhas__geral" id="falhas-geral"></div>
+      </section>
+    </main>
+
+    <div class="notificacoes" id="notificacoes" role="status" aria-live="polite"></div>
+  </body>
+</html>

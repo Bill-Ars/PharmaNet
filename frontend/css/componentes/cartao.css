@@ -1,0 +1,379 @@
+/*
+ * cartao.css — camada «componentes».
+ * Cartão base (.cartao) e as suas três especializações:
+ *   .cartao-farmacia — resultado da pesquisa (data-estado + data-origem)
+ *   .cartao-no       — estado de um nó no painel (data-estado: vivo, lento, indisponivel)
+ *   .metrica         — número grande do painel
+ * As cores de estado vêm de --cor-estado, definida em tokens.css pelo data-estado.
+ */
+.cartao {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+  min-width: 0;
+  padding: var(--espaco-5);
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-grande);
+  background: var(--cor-superficie);
+  box-shadow: var(--sombra-1);
+  transition:
+    box-shadow var(--duracao-normal) var(--curva-suave),
+    border-color var(--duracao-lenta) var(--curva-suave),
+    background-color var(--duracao-lenta) var(--curva-suave);
+}
+
+@media (min-width: 768px) {
+  .cartao {
+    padding: var(--espaco-6);
+  }
+}
+
+.cartao__titulo {
+  font-size: var(--texto-medio);
+}
+
+/* ======================================================================
+   Cartão de farmácia
+   Sem barras de cor: o estado lê-se no indicador junto ao texto e na
+   «rota» do rodapé, que mostra que nó respondeu (líder → réplica).
+   ====================================================================== */
+.cartao-farmacia {
+  gap: var(--espaco-5);
+  overflow: hidden;
+  /* Reflexo de luz no topo: dá profundidade sem pesar na sombra. */
+  box-shadow:
+    inset 0 var(--borda-fina) 0 var(--cor-reflexo),
+    var(--sombra-1);
+}
+
+/* Trama de pontos no canto superior direito, a desvanecer: assinatura visual discreta. */
+.cartao-farmacia::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 70%;
+  background-image: radial-gradient(var(--cor-trama) var(--borda-fina), transparent 0);
+  background-size: var(--espaco-3) var(--espaco-3);
+  -webkit-mask-image: radial-gradient(ellipse at top right, #000, transparent 70%);
+  mask-image: radial-gradient(ellipse at top right, #000, transparent 70%);
+  pointer-events: none;
+}
+
+.cartao-farmacia > * {
+  position: relative;
+}
+
+.cartao-farmacia__cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+}
+
+/* Linha pequena por cima do título (o medicamento pesquisado). */
+.cartao-farmacia__sobretitulo {
+  font-size: var(--texto-micro);
+  font-weight: var(--peso-forte);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.cartao-farmacia__titulo {
+  margin-top: var(--espaco-1);
+  font-size: var(--texto-medio);
+}
+
+/* Número da farmácia em grande e leve, como num catálogo. */
+.cartao-farmacia__indice {
+  font-size: var(--texto-titulo);
+  font-weight: var(--peso-normal);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-borda-forte);
+}
+
+.cartao-farmacia__estado {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  font-size: var(--texto-grande);
+  font-weight: var(--peso-titulo);
+  letter-spacing: -0.02em;
+}
+
+.cartao-farmacia__rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+  padding-top: var(--espaco-4);
+  border-top: var(--borda-fina) solid var(--cor-borda);
+}
+
+/* Farmácia que não foi possível consultar: superfície recolhida e texto suave. */
+.cartao-farmacia[data-estado='indisponivel'] {
+  background: var(--cor-superficie-2);
+  box-shadow: none;
+}
+
+.cartao-farmacia[data-estado='indisponivel'] .cartao-farmacia__estado {
+  font-size: var(--texto-medio);
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Indicador de estado (pequeno quadrado com halo) ---------- */
+.indicador {
+  flex-shrink: 0;
+  width: var(--tamanho-ponto);
+  height: var(--tamanho-ponto);
+  border-radius: var(--raio-minimo);
+  background: var(--cor-estado, var(--cor-neutra));
+  box-shadow: 0 0 0 var(--largura-anel) var(--cor-estado-suave, var(--cor-neutra-suave));
+  transition:
+    background-color var(--duracao-lenta) var(--curva-suave),
+    box-shadow var(--duracao-lenta) var(--curva-suave);
+}
+
+/* Sem resposta: quadrado só com contorno, porque não há dado nenhum. */
+[data-estado='indisponivel'] .indicador {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--borda-grossa) var(--cor-neutra);
+}
+
+/* ---------- Rota da resposta: líder → réplica ---------- */
+.rota {
+  display: flex;
+  align-items: center;
+}
+
+.rota__rotulo {
+  margin-right: var(--espaco-3);
+  font-size: var(--texto-micro);
+  font-weight: var(--peso-forte);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.rota__no {
+  display: grid;
+  place-items: center;
+  width: var(--espaco-7);
+  height: var(--espaco-7);
+  border: var(--borda-fina) solid var(--cor-borda-forte);
+  border-radius: var(--raio-total);
+  background: var(--cor-superficie);
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-micro);
+  font-weight: var(--peso-extra);
+}
+
+/* O nó que respondeu fica cheio, na cor da origem (verde líder, âmbar réplica). */
+.rota__no[data-papel='respondeu'] {
+  border-color: var(--cor-estado);
+  background: var(--cor-estado);
+  color: var(--cor-superficie);
+}
+
+/* O nó que falhou fica só com contorno tracejado. */
+.rota__no[data-papel='falhou'] {
+  border-style: dashed;
+  border-color: var(--cor-neutra);
+  background: transparent;
+  color: var(--cor-neutra);
+}
+
+.rota__ligacao {
+  width: var(--espaco-6);
+  border-top: var(--borda-grossa) dashed var(--cor-borda-forte);
+}
+
+/* Linha cheia quando o pedido passou mesmo por ela (líder falhou → réplica). */
+.rota__ligacao--percorrida {
+  border-top-style: solid;
+  border-top-color: var(--cor-aviso);
+}
+
+/* ======================================================================
+   Cartão de nó
+   ====================================================================== */
+.cartao-no {
+  gap: var(--espaco-5);
+  box-shadow:
+    inset 0 var(--borda-fina) 0 var(--cor-reflexo),
+    var(--sombra-1);
+}
+
+/* Contorno exterior que brilha uma vez quando o nó muda de estado. */
+.cartao-no::after {
+  content: '';
+  position: absolute;
+  inset: calc(var(--borda-fina) * -1);
+  border-radius: inherit;
+  box-shadow: 0 0 0 var(--largura-anel) var(--cor-estado);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cartao-no.cartao-no--mudou::after {
+  animation: brilho-borda var(--duracao-lenta) var(--curva-suave);
+}
+
+.cartao-no[data-estado='indisponivel'] {
+  background: var(--cor-superficie-2);
+  box-shadow: none;
+}
+
+.cartao-no__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+}
+
+.cartao-no__identidade {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+}
+
+/* Letra do nó num mosaico, como uma peça de hardware identificada. */
+.cartao-no__monograma {
+  display: grid;
+  place-items: center;
+  width: var(--espaco-11);
+  height: var(--espaco-11);
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-medio);
+  background: var(--cor-superficie-2);
+  font-size: var(--texto-grande);
+  font-weight: var(--peso-extra);
+  transition: color var(--duracao-lenta) var(--curva-suave);
+}
+
+.cartao-no[data-estado='indisponivel'] .cartao-no__monograma {
+  color: var(--cor-texto-suave);
+  background: var(--cor-superficie);
+}
+
+.cartao-no__sobretitulo {
+  font-size: var(--texto-micro);
+  font-weight: var(--peso-forte);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.cartao-no__nome {
+  font-size: var(--texto-medio);
+}
+
+/* Estado: ponto colorido + palavra. A cor fica só no ponto; o texto mantém o contraste. */
+.cartao-no__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-height: var(--espaco-8);
+  padding: var(--espaco-1) var(--espaco-3);
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-total);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-forte);
+}
+
+.cartao-no__dados {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--espaco-4);
+  padding-top: var(--espaco-4);
+  border-top: var(--borda-fina) solid var(--cor-borda);
+}
+
+.cartao-no__dados dt {
+  font-size: var(--texto-micro);
+  font-weight: var(--peso-forte);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.cartao-no__dados dd {
+  margin: var(--espaco-1) 0 0;
+  font-weight: var(--peso-forte);
+  font-variant-numeric: tabular-nums;
+}
+
+.cartao-no[data-estado='indisponivel'] .cartao-no__dados dd {
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- Ponto de estado ---------- */
+.ponto-estado {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--tamanho-ponto);
+  height: var(--tamanho-ponto);
+  border-radius: var(--raio-total);
+  background: var(--cor-estado, var(--cor-neutra));
+  transition: background-color var(--duracao-lenta) var(--curva-suave);
+}
+
+/* Onda que sai do ponto. Só quando o nó está vivo. */
+.ponto-estado::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  opacity: 0;
+}
+
+[data-estado='vivo'] .ponto-estado::after,
+.ponto-estado[data-estado='vivo']::after {
+  animation: pulsar var(--duracao-pulsar) var(--curva-suave) infinite;
+}
+
+/* ======================================================================
+   Métrica (número grande)
+   ====================================================================== */
+.metrica {
+  gap: var(--espaco-1);
+}
+
+.metrica__rotulo {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-forte);
+  color: var(--cor-texto-suave);
+}
+
+.metrica__valor {
+  font-family: var(--fonte-numeros);
+  font-size: var(--texto-numero);
+  font-weight: var(--peso-extra);
+  line-height: var(--altura-linha-apertada);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.metrica__unidade {
+  margin-left: var(--espaco-1);
+  font-size: var(--texto-medio);
+  font-weight: var(--peso-forte);
+  color: var(--cor-texto-suave);
+}
+
+.metrica__nota {
+  font-size: var(--texto-pequeno);
+  color: var(--cor-texto-suave);
+}

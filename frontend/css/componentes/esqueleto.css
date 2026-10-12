@@ -1,0 +1,94 @@
+/*
+ * esqueleto.css — camada «componentes».
+ * Blocos cinzentos que ocupam o lugar do conteúdo enquanto o pedido não chega.
+ * O brilho que desliza é um pseudo-elemento movido com transform (leve no telemóvel).
+ * Com «reduzir movimento», animacoes.css desliga o brilho e fica um fundo fixo.
+ */
+.esqueleto {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--raio-pequeno);
+  background: var(--cor-superficie-2);
+}
+
+.esqueleto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--cor-brilho), transparent);
+  transform: translateX(-100%);
+  animation: brilho-deslizar var(--duracao-brilho) ease-in-out infinite;
+}
+
+.esqueleto--texto {
+  height: 1em;
+  width: 100%;
+}
+
+.esqueleto--curto {
+  width: 45%;
+}
+
+.esqueleto--medio {
+  width: 70%;
+}
+
+.esqueleto--titulo {
+  height: var(--espaco-6);
+  width: 60%;
+}
+
+.esqueleto--etiqueta {
+  height: var(--espaco-6);
+  width: 6rem;
+  border-radius: var(--raio-total);
+}
+
+.esqueleto--quadrado {
+  flex-shrink: 0;
+  width: var(--espaco-10);
+  height: var(--espaco-10);
+  border-radius: var(--raio-medio);
+}
+
+.esqueleto--circulo {
+  flex-shrink: 0;
+  width: var(--espaco-9);
+  height: var(--espaco-9);
+  border-radius: var(--raio-total);
+}
+
+/* Cartão de farmácia «a carregar»: as mesmas medidas do cartão verdadeiro,
+   para a página não saltar quando chega a resposta. Sem a trama decorativa. */
+.cartao-farmacia--esqueleto::before {
+  content: none;
+}
+
+.esqueleto--rotulo {
+  width: 8rem;
+  height: var(--texto-micro);
+}
+
+/* Lugar da rota (dois nós ligados) no rodapé do cartão. */
+.esqueleto--rota {
+  width: calc(2 * var(--espaco-7) + var(--espaco-6));
+  height: var(--espaco-7);
+  border-radius: var(--raio-total);
+}
+
+.esqueleto__linha {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+}
+
+.esqueleto__linha > .esqueleto--texto {
+  flex: 1;
+}
+
+/* No cabeçalho do cartão-esqueleto, a coluna de texto ocupa o espaço livre. */
+.cartao-farmacia--esqueleto .cartao-farmacia__cabecalho > .pilha {
+  flex: 1;
+  gap: var(--espaco-2);
+}

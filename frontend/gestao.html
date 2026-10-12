@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Gestão do stock da farmácia no FarmaRede (área reservada)." />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#f3f6f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1316" media="(prefers-color-scheme: dark)" />
+    <title>Gestão de stock · FarmaRede</title>
+
+    <!-- Aplica o tema antes de a página aparecer, para não «piscar» em branco no modo escuro. -->
+    <script>
+      {
+        let tema = null;
+        try {
+          tema = localStorage.getItem('farmarede-tema');
+        } catch {}
+        if (!tema) tema = matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+        document.documentElement.dataset.tema = tema;
+      }
+      // Uma transição entre páginas interrompida (ex.: redirecção logo ao abrir) não é um erro.
+      for (const momento of ['pageswap', 'pagereveal']) {
+        addEventListener(momento, (evento) => {
+          const transicao = evento.viewTransition;
+          if (!transicao) return;
+          for (const promessa of [transicao.ready, transicao.finished, transicao.updateCallbackDone]) {
+            promessa?.catch(() => {});
+          }
+        });
+      }
+    </script>
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <!-- A fonte é pedida já, em paralelo com o CSS (ver css/base/tipografia.css). -->
+    <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/paginas/gestao.css" />
+    <script type="module" src="js/paginas/gestao.js"></script>
+  </head>
+
+  <body>
+    <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
+    <!-- A marca aparece logo, sem esperar pelo JS; navegacao.js troca este bloco pelo cabeçalho completo. -->
+    <div id="navegacao" class="cabecalho-lugar">
+      <div class="contentor cabecalho__interior">
+        <a class="marca" href="index.html" aria-label="FarmaRede — página inicial">
+          <span class="marca__simbolo">
+            <svg class="icone" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z"/></svg>
+          </span>
+          <span>Farma<span class="marca__realce">Rede</span></span>
+        </a>
+      </div>
+    </div>
+
+    <main id="conteudo" class="contentor pagina anim-entrar">
+      <!-- Faixa «só de leitura» (Fase 6) -->
+      <div id="faixa-estado" aria-live="polite"></div>
+
+      <header class="gestao__cabecalho">
+        <div class="pilha">
+          <p class="sobretitulo">Gestão de stock</p>
+          <h1 id="titulo-gestao">A carregar a farmácia…</h1>
+          <div class="gestao__meta" id="meta-gestao" aria-busy="true">
+            <span class="esqueleto esqueleto--etiqueta" aria-hidden="true"></span>
+            <span class="esqueleto esqueleto--etiqueta" aria-hidden="true"></span>
+          </div>
+        </div>
+        <!-- Só para o administrador: escolher a farmácia a gerir. -->
+        <div id="escolha-farmacia"></div>
+      </header>
+
+      <section class="seccao" aria-labelledby="titulo-stock">
+        <h2 class="visualmente-oculto" id="titulo-stock">Medicamentos em stock</h2>
+        <div id="zona-avisos" aria-live="polite"></div>
+
+        <div class="tabela-contentor">
+          <table class="tabela">
+            <caption class="visualmente-oculto">Stock da farmácia</caption>
+            <thead>
+              <tr>
+                <th scope="col">Medicamento</th>
+                <th scope="col" class="tabela__numero">Quantidade</th>
+                <th scope="col">Versão</th>
+                <th scope="col" class="tabela__accoes"><span class="visualmente-oculto">Acções</span></th>
+              </tr>
+            </thead>
+            <!-- Linhas-esqueleto enquanto o stock não chega (substituídas na Fase 6). -->
+            <tbody id="linhas-stock" aria-busy="true">
+              <tr class="tabela__linha" aria-hidden="true">
+                <td class="tabela__nome"><span class="esqueleto esqueleto--texto esqueleto--medio"></span></td>
+                <td class="tabela__numero"><span class="esqueleto esqueleto--texto"></span></td>
+                <td><span class="esqueleto esqueleto--texto esqueleto--curto"></span></td>
+                <td class="tabela__accoes"><span class="esqueleto esqueleto--etiqueta"></span></td>
+              </tr>
+              <tr class="tabela__linha" aria-hidden="true">
+                <td class="tabela__nome"><span class="esqueleto esqueleto--texto"></span></td>
+                <td class="tabela__numero"><span class="esqueleto esqueleto--texto"></span></td>
+                <td><span class="esqueleto esqueleto--texto esqueleto--curto"></span></td>
+                <td class="tabela__accoes"><span class="esqueleto esqueleto--etiqueta"></span></td>
+              </tr>
+              <tr class="tabela__linha" aria-hidden="true">
+                <td class="tabela__nome"><span class="esqueleto esqueleto--texto esqueleto--medio"></span></td>
+                <td class="tabela__numero"><span class="esqueleto esqueleto--texto"></span></td>
+                <td><span class="esqueleto esqueleto--texto esqueleto--curto"></span></td>
+                <td class="tabela__accoes"><span class="esqueleto esqueleto--etiqueta"></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div class="notificacoes" id="notificacoes" role="status" aria-live="polite"></div>
+  </body>
+</html>

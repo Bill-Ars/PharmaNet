@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="FarmaRede: veja em que farmácia o seu medicamento está disponível, com uma pesquisa às três farmácias ao mesmo tempo."
+    />
+    <meta name="theme-color" content="#f3f6f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1316" media="(prefers-color-scheme: dark)" />
+    <title>Pesquisa · FarmaRede</title>
+
+    <!-- Aplica o tema antes de a página aparecer, para não «piscar» em branco no modo escuro. -->
+    <script>
+      {
+        let tema = null;
+        try {
+          tema = localStorage.getItem('farmarede-tema');
+        } catch {}
+        if (!tema) tema = matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+        document.documentElement.dataset.tema = tema;
+      }
+      // Uma transição entre páginas interrompida (ex.: redirecção logo ao abrir) não é um erro.
+      for (const momento of ['pageswap', 'pagereveal']) {
+        addEventListener(momento, (evento) => {
+          const transicao = evento.viewTransition;
+          if (!transicao) return;
+          for (const promessa of [transicao.ready, transicao.finished, transicao.updateCallbackDone]) {
+            promessa?.catch(() => {});
+          }
+        });
+      }
+    </script>
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <!-- A fonte é pedida já, em paralelo com o CSS (ver css/base/tipografia.css). -->
+    <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/paginas/pesquisa.css" />
+    <script type="module" src="js/paginas/pesquisa.js"></script>
+  </head>
+
+  <body>
+    <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
+    <!-- A marca aparece logo, sem esperar pelo JS; navegacao.js troca este bloco pelo cabeçalho completo. -->
+    <div id="navegacao" class="cabecalho-lugar">
+      <div class="contentor cabecalho__interior">
+        <a class="marca" href="index.html" aria-label="FarmaRede — página inicial">
+          <span class="marca__simbolo">
+            <svg class="icone" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z"/></svg>
+          </span>
+          <span>Farma<span class="marca__realce">Rede</span></span>
+        </a>
+      </div>
+    </div>
+
+    <main id="conteudo" class="contentor pagina anim-entrar">
+      <!-- Zona de destaque -->
+      <section class="destaque" aria-labelledby="titulo-pesquisa">
+        <div class="destaque__rede">
+          <span class="rota" aria-hidden="true">
+            <span class="rota__no">A</span>
+            <span class="rota__ligacao"></span>
+            <span class="rota__no">B</span>
+            <span class="rota__ligacao"></span>
+            <span class="rota__no">C</span>
+          </span>
+          <span class="sobretitulo">Três farmácias, uma pesquisa</span>
+        </div>
+
+        <h1 class="destaque__titulo" id="titulo-pesquisa">Encontre o seu medicamento</h1>
+        <p class="destaque__subtitulo">
+          Perguntamos às três farmácias ao mesmo tempo e mostramos onde está disponível — e de
+          onde veio cada resposta.
+        </p>
+
+        <form class="campo-pesquisa campo-pesquisa--com-botao destaque__pesquisa" id="formulario-pesquisa" role="search">
+          <label class="visualmente-oculto" for="campo-pesquisa">Nome do medicamento</label>
+          <span class="campo-pesquisa__icone" data-icone="pesquisa" data-tamanho="22"></span>
+          <input
+            class="campo__entrada"
+            id="campo-pesquisa"
+            name="q"
+            type="search"
+            list="catalogo"
+            placeholder="Ex.: paracetamol"
+            autocomplete="off"
+            enterkeyhint="search"
+            required
+          />
+          <datalist id="catalogo"></datalist>
+          <button type="submit" class="botao campo-pesquisa__botao">Pesquisar</button>
+        </form>
+
+        <div class="destaque__atalhos" id="atalhos">
+          <span class="sobretitulo destaque__atalhos-rotulo">Frequentes</span>
+          <button type="button" class="chip" data-pesquisa="Paracetamol">
+            <span data-icone="comprimido" data-tamanho="16"></span>Paracetamol
+          </button>
+          <button type="button" class="chip" data-pesquisa="Ibuprofeno">
+            <span data-icone="comprimido" data-tamanho="16"></span>Ibuprofeno
+          </button>
+          <button type="button" class="chip" data-pesquisa="Amoxicilina">
+            <span data-icone="comprimido" data-tamanho="16"></span>Amoxicilina
+          </button>
+          <button type="button" class="chip" data-pesquisa="Metformina">
+            <span data-icone="comprimido" data-tamanho="16"></span>Metformina
+          </button>
+        </div>
+      </section>
+
+      <!-- Resultados: desenhados por js/paginas/pesquisa.js -->
+      <section class="resultados" aria-label="Resultados da pesquisa">
+        <div id="zona-avisos"></div>
+        <!-- Mesmo aspecto do estado vazio desenhado pelo JS, para a página não saltar. -->
+        <div class="resultados__lista" id="lista-resultados">
+          <div class="cartao estado-vazio">
+            <!-- O mesmo desenho de icones.js («pesquisaVazia»), já no HTML para nada saltar. -->
+            <svg class="estado-vazio__ilustracao" viewBox="0 0 120 120" width="120" height="120" fill="none" aria-hidden="true" focusable="false">
+              <circle class="ilustracao__fundo" cx="60" cy="60" r="54"/>
+              <g transform="rotate(-35 50 56)"><rect class="ilustracao__peca" x="26" y="45" width="48" height="22" rx="11" stroke="currentColor" stroke-width="3"/><path d="M50 45v22" stroke="currentColor" stroke-width="3"/></g>
+              <circle class="ilustracao__peca" cx="76" cy="70" r="15" stroke="currentColor" stroke-width="4"/>
+              <path d="m87 81 11 11" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+            <p class="estado-vazio__titulo">Ainda não pesquisou nada</p>
+            <p class="estado-vazio__texto">
+              Escreva o nome de um medicamento para ver onde está disponível.
+            </p>
+          </div>
+        </div>
+        <!-- Frase curta lida pelo leitor de ecrã a cada mudança («A pesquisar…», «Disponível em 2 de 3»). -->
+        <p class="visualmente-oculto" id="anuncio" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <footer class="rodape">
+      <div class="contentor rodape__interior">
+        <p class="rodape__nota">
+          <span data-icone="info" data-tamanho="16"></span>
+          Esta pesquisa ajuda a localizar o medicamento, mas não garante que ainda exista quando
+          chegar à farmácia.
+        </p>
+        <p>FarmaRede  · Todos os direitos reservados!</p>
+      </div>
+    </footer>
+
+    <div class="notificacoes" id="notificacoes" role="status" aria-live="polite"></div>
+  </body>
+</html>

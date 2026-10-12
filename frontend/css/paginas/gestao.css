@@ -1,0 +1,83 @@
+/*
+ * gestao.css — camada «paginas».
+ * Cabeçalho da gestão de stock (farmácia, nó líder, tempo de sessão).
+ * A tabela usa o componente .tabela (que vira lista no telemóvel).
+ */
+/* Tudo na camada «paginas» (a ordem das camadas está declarada em main.css). */
+@layer paginas {
+
+.gestao__cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+.gestao__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+}
+
+.gestao__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espaco-2);
+}
+
+.gestao__meta .esqueleto--etiqueta {
+  width: 8rem;
+}
+
+/* Selector de farmácia do administrador. */
+.gestao__escolha {
+  min-width: 12rem;
+}
+
+/* Campo − número + dentro da linha, com o erro por baixo. */
+.campo-quantidade {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--espaco-2);
+}
+
+.campo-quantidade .campo__erro {
+  max-width: 20rem;
+  text-align: left;
+}
+
+/* Quantidade 0 em vermelho: o mesmo significado de «Sem stock» na pesquisa. */
+.tabela__quantidade--zero {
+  color: var(--cor-erro);
+}
+
+/* No telemóvel, a linha em edição dá a largura toda ao campo da quantidade. */
+@media (max-width: 767.98px) {
+  .tabela__linha--a-editar td.tabela__numero {
+    grid-column: 1 / -1;
+  }
+
+  .campo-quantidade {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .campo-quantidade .passos {
+    justify-content: space-between;
+  }
+
+  .campo-quantidade .passos__entrada {
+    flex: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .gestao__cabecalho {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+} /* fim de @layer paginas */

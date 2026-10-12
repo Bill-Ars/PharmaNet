@@ -1,0 +1,323 @@
+/*
+ * campo.css — camada «componentes».
+ * Campos de formulário: rótulo, entrada, ajuda e erro (.campo),
+ * o campo grande de pesquisa (.campo-pesquisa), a palavra-passe com botão
+ * de mostrar (.campo__grupo) e o número com botões − e + (.passos).
+ * O texto dos campos tem sempre ≥ 16 px para o iPhone não fazer zoom.
+ */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  min-width: 0;
+}
+
+.campo__rotulo {
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-forte);
+  color: var(--cor-texto);
+}
+
+.campo__ajuda {
+  font-size: var(--texto-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+.campo__entrada {
+  width: 100%;
+  min-height: var(--alvo-toque);
+  padding: var(--espaco-2) var(--espaco-4);
+  border: var(--borda-fina) solid var(--cor-borda-campo);
+  border-radius: var(--raio-medio);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: max(16px, var(--texto-base));
+  box-shadow: var(--sombra-1);
+  transition:
+    border-color var(--duracao-rapida) var(--curva-suave),
+    box-shadow var(--duracao-rapida) var(--curva-suave);
+}
+
+.campo__entrada::placeholder {
+  color: var(--cor-texto-suave);
+  opacity: 1;
+}
+
+.campo__entrada:hover {
+  border-color: var(--cor-texto-suave);
+}
+
+/* Anel de cor no foco. O contorno do :focus-visible fica dispensado aqui
+   porque o anel já é bem visível. */
+.campo__entrada:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow:
+    0 0 0 var(--largura-anel) var(--cor-anel),
+    var(--sombra-2);
+}
+
+.campo__entrada:disabled {
+  background: var(--cor-superficie-2);
+  color: var(--cor-texto-suave);
+  cursor: not-allowed;
+}
+
+/* Setas da lista de opções desenhadas por nós, iguais em todos os navegadores. */
+select.campo__entrada {
+  appearance: none;
+  padding-right: var(--espaco-10);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--cor-texto-suave) 50%),
+    linear-gradient(135deg, var(--cor-texto-suave) 50%, transparent 50%);
+  background-position:
+    calc(100% - var(--espaco-5)) 50%,
+    calc(100% - var(--espaco-4)) 50%;
+  background-size: var(--espaco-1) var(--espaco-1);
+  background-repeat: no-repeat;
+}
+
+/* ---------- Erro ---------- */
+.campo__entrada[aria-invalid='true'] {
+  border-color: var(--cor-erro);
+}
+
+.campo__entrada[aria-invalid='true']:focus {
+  box-shadow:
+    0 0 0 var(--largura-anel) var(--cor-erro-suave),
+    var(--sombra-2);
+}
+
+.campo__erro {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espaco-2);
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-medio);
+  color: var(--cor-erro);
+}
+
+.campo__erro .icone {
+  flex-shrink: 0;
+  margin-top: var(--espaco-half);
+}
+
+/* ---------- Entrada com botão no fim (palavra-passe) ---------- */
+.campo__grupo {
+  position: relative;
+}
+
+.campo__grupo .campo__entrada {
+  padding-right: calc(var(--alvo-toque) + var(--espaco-2));
+}
+
+.campo__botao-interno {
+  position: absolute;
+  top: 50%;
+  right: var(--espaco-1);
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: var(--alvo-toque);
+  height: var(--alvo-toque);
+  border: 0;
+  border-radius: var(--raio-medio);
+  background: transparent;
+  color: var(--cor-texto-suave);
+}
+
+.campo__botao-interno:hover {
+  color: var(--cor-primaria);
+}
+
+/* ---------- Campo grande de pesquisa ---------- */
+.campo-pesquisa {
+  position: relative;
+  width: 100%;
+}
+
+.campo-pesquisa__icone {
+  position: absolute;
+  top: 50%;
+  left: var(--espaco-5);
+  transform: translateY(-50%);
+  color: var(--cor-primaria);
+  pointer-events: none;
+}
+
+.campo-pesquisa .campo__entrada {
+  min-height: calc(var(--alvo-toque) + var(--espaco-4));
+  padding-left: calc(var(--espaco-5) + var(--espaco-8));
+  padding-right: var(--espaco-4);
+  border-radius: var(--raio-grande);
+  font-size: var(--texto-medio);
+  box-shadow: var(--sombra-2);
+}
+
+.campo-pesquisa .campo__entrada:focus {
+  box-shadow:
+    0 0 0 var(--largura-anel) var(--cor-anel),
+    var(--sombra-3);
+}
+
+/* Botão «Pesquisar» dentro do campo, a partir do tablet. */
+.campo-pesquisa--com-botao .campo__entrada {
+  padding-right: var(--espaco-4);
+}
+
+.campo-pesquisa__botao {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .campo-pesquisa--com-botao .campo__entrada {
+    padding-right: calc(var(--espaco-16) + var(--espaco-12));
+  }
+
+  .campo-pesquisa__botao {
+    display: inline-flex;
+    position: absolute;
+    top: 50%;
+    right: var(--espaco-2);
+    transform: translateY(-50%);
+  }
+
+  .campo-pesquisa__botao:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.97);
+  }
+
+  @media (hover: hover) {
+    .campo-pesquisa__botao:hover:not(:disabled) {
+      transform: translateY(calc(-50% - 1px));
+    }
+  }
+}
+
+/* ---------- Número com botões − e + ---------- */
+.passos {
+  display: inline-flex;
+  align-items: stretch;
+  border: var(--borda-fina) solid var(--cor-borda-campo);
+  border-radius: var(--raio-medio);
+  background: var(--cor-superficie);
+  box-shadow: var(--sombra-1);
+  overflow: hidden;
+  transition:
+    border-color var(--duracao-rapida) var(--curva-suave),
+    box-shadow var(--duracao-rapida) var(--curva-suave);
+}
+
+.passos:focus-within {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 var(--largura-anel) var(--cor-anel);
+}
+
+.passos:has([aria-invalid='true']) {
+  border-color: var(--cor-erro);
+}
+
+.passos__botao {
+  display: grid;
+  place-items: center;
+  width: var(--alvo-toque);
+  min-height: var(--alvo-toque);
+  border: 0;
+  background: transparent;
+  color: var(--cor-primaria);
+  transition: background-color var(--duracao-rapida) var(--curva-suave);
+}
+
+.passos__botao:hover {
+  background: var(--cor-primaria-suave);
+}
+
+.passos__botao:focus-visible {
+  outline-offset: calc(var(--largura-foco) * -1);
+}
+
+.passos__entrada {
+  width: 5ch;
+  min-width: 0;
+  border: 0;
+  border-inline: var(--borda-fina) solid var(--cor-borda);
+  background: transparent;
+  color: var(--cor-texto);
+  font-size: max(16px, var(--texto-base));
+  font-weight: var(--peso-forte);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.passos__entrada:focus {
+  outline: none;
+}
+
+/* Esconde as setas nativas do campo numérico: já temos os botões − e +. */
+.passos__entrada::-webkit-outer-spin-button,
+.passos__entrada::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ---------- Controlo segmentado (escolher uma de poucas opções) ---------- */
+/* Feito com <fieldset> e botões de rádio: funciona com teclado (setas) e leitor de ecrã. */
+.segmentado {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: var(--espaco-1);
+  margin: 0;
+  padding: var(--espaco-1);
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-medio);
+  background: var(--cor-superficie-2);
+  min-inline-size: 0;
+}
+
+.segmentado__opcao {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: calc(var(--alvo-toque) - var(--espaco-2));
+  padding-inline: var(--espaco-2);
+  border-radius: var(--raio-pequeno);
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-forte);
+  color: var(--cor-texto-suave);
+  cursor: pointer;
+  transition:
+    background-color var(--duracao-rapida) var(--curva-suave),
+    color var(--duracao-rapida) var(--curva-suave),
+    box-shadow var(--duracao-rapida) var(--curva-suave);
+}
+
+/* O rádio fica invisível mas continua a receber o foco e as setas do teclado. */
+.segmentado__opcao input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segmentado__opcao:hover {
+  color: var(--cor-texto);
+}
+
+.segmentado__opcao:has(input:checked) {
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  box-shadow: var(--sombra-1);
+}
+
+.segmentado__opcao:has(input:focus-visible) {
+  outline: var(--largura-foco) solid var(--cor-foco);
+  outline-offset: var(--espaco-half);
+}
+
+.segmentado:disabled .segmentado__opcao {
+  opacity: 0.5;
+  cursor: progress;
+}

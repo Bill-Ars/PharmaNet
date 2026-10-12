@@ -1,0 +1,123 @@
+/*
+ * tipografia.css — camada «base».
+ * Tipo de letra, tamanhos dos títulos, parágrafos e ligações.
+ * Os tamanhos são fluidos (clamp) e vêm todos de tokens.css.
+ */
+/*
+ * Plus Jakarta Sans (Google Fonts, licença SIL OFL 1.1 — ver fonts/OFL.txt), alojada no
+ * próprio site: um só ficheiro variável (pesos 400 a 800) com os caracteres latinos.
+ * Vir do nosso domínio poupa duas ligações externas e acelera a primeira pintura.
+ * font-display: swap → o texto aparece logo com a letra do sistema e troca quando a fonte chega.
+ */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../../fonts/plus-jakarta-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+body {
+  font-family: var(--fonte-base);
+  font-size: var(--texto-base);
+  font-weight: var(--peso-normal);
+  line-height: var(--altura-linha-normal);
+  color: var(--cor-texto);
+  background-color: var(--cor-fundo);
+  transition:
+    background-color var(--duracao-normal) var(--curva-suave),
+    color var(--duracao-normal) var(--curva-suave);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--altura-linha-apertada);
+  font-weight: var(--peso-titulo);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--texto-titulo);
+  font-weight: var(--peso-extra);
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-size: var(--texto-grande);
+}
+
+h3 {
+  font-size: var(--texto-medio);
+}
+
+h4 {
+  font-size: var(--texto-base);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+small,
+.texto-pequeno {
+  font-size: var(--texto-pequeno);
+}
+
+.texto-suave {
+  color: var(--cor-texto-suave);
+}
+
+/* Linha curta em maiúsculas espaçadas por cima de um título. */
+.sobretitulo {
+  font-size: var(--texto-micro);
+  font-weight: var(--peso-forte);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+.texto-destaque {
+  font-size: var(--texto-destaque);
+  font-weight: var(--peso-extra);
+  line-height: var(--altura-linha-apertada);
+  letter-spacing: -0.03em;
+}
+
+/* Algarismos de largura fixa: os números que mudam não fazem o texto saltar. */
+.numeros-tabulares {
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: var(--cor-primaria);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+  transition: color var(--duracao-rapida) var(--curva-suave);
+}
+
+a:hover {
+  color: var(--cor-primaria-forte);
+}
+
+strong,
+b {
+  font-weight: var(--peso-forte);
+}
+
+code {
+  font-family: ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, monospace;
+  font-size: 0.9em;
+  padding: var(--espaco-half) var(--espaco-1);
+  border-radius: var(--raio-pequeno);
+  background: var(--cor-superficie-2);
+}
+
+::selection {
+  background: var(--cor-primaria-suave);
+  color: var(--cor-texto);
+}

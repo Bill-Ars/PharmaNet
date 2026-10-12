@@ -1,0 +1,175 @@
+/*
+ * botao.css — camada «componentes».
+ * Botões (.botao e variantes) e «chips» de atalho (.chip).
+ * Ao passar o rato sobem 1 px; ao carregar encolhem para 97 %. Só se anima transform.
+ */
+.botao {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espaco-2);
+  min-height: var(--alvo-toque);
+  min-width: var(--alvo-toque);
+  padding: var(--espaco-2) var(--espaco-5);
+  border: var(--borda-fina) solid transparent;
+  border-radius: var(--raio-medio);
+  background: var(--cor-primaria);
+  color: var(--cor-sobre-primaria);
+  font-size: var(--texto-base);
+  font-weight: var(--peso-forte);
+  line-height: var(--altura-linha-apertada);
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: var(--sombra-1);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition:
+    transform var(--duracao-rapida) var(--curva-suave),
+    box-shadow var(--duracao-rapida) var(--curva-suave),
+    background-color var(--duracao-rapida) var(--curva-suave),
+    color var(--duracao-rapida) var(--curva-suave);
+}
+
+/* Só em dispositivos com rato: no toque o :hover fica «preso». */
+@media (hover: hover) {
+  .botao:hover:not(:disabled, [aria-disabled='true']) {
+    transform: translateY(-1px);
+    box-shadow: var(--sombra-2);
+  }
+
+  .botao:not(.botao--secundario, .botao--fantasma, .botao--perigo):hover:not(:disabled) {
+    background: var(--cor-primaria-forte);
+    color: var(--cor-sobre-primaria);
+  }
+}
+
+.botao:active:not(:disabled, [aria-disabled='true']) {
+  transform: scale(0.97);
+  box-shadow: var(--sombra-1);
+}
+
+.botao:disabled,
+.botao[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---------- Variantes ---------- */
+.botao--secundario {
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  border-color: var(--cor-borda);
+}
+
+.botao--secundario:hover:not(:disabled) {
+  border-color: var(--cor-borda-forte);
+  color: var(--cor-texto);
+}
+
+.botao--fantasma {
+  background: transparent;
+  color: var(--cor-primaria);
+  box-shadow: none;
+}
+
+.botao--fantasma:hover:not(:disabled) {
+  background: var(--cor-primaria-suave);
+  color: var(--cor-primaria);
+  box-shadow: none;
+}
+
+.botao--perigo {
+  background: var(--cor-erro);
+  color: var(--cor-sobre-erro);
+}
+
+/* ---------- Tamanhos e formas ---------- */
+/* Mais compacto por dentro, mas o alvo de toque continua com 44 px de altura. */
+.botao--pequeno {
+  padding-inline: var(--espaco-3);
+  font-size: var(--texto-pequeno);
+}
+
+.botao--icone {
+  padding: 0;
+  width: var(--alvo-toque);
+  border-radius: var(--raio-total);
+}
+
+.botao--bloco {
+  width: 100%;
+}
+
+/* ---------- A carregar ---------- */
+/* O texto fica invisível (mas mantém a largura) e aparece um círculo a rodar. */
+.botao[aria-busy='true'] {
+  color: transparent;
+  pointer-events: none;
+}
+
+.botao[aria-busy='true']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--espaco-5);
+  height: var(--espaco-5);
+  border: var(--borda-grossa) solid var(--cor-sobre-primaria);
+  border-right-color: transparent;
+  border-radius: var(--raio-total);
+  animation: girar var(--duracao-girar) linear infinite;
+}
+
+.botao--secundario[aria-busy='true']::after,
+.botao--fantasma[aria-busy='true']::after {
+  border-color: var(--cor-primaria);
+  border-right-color: transparent;
+}
+
+/* ---------- Chips (atalhos da pesquisa) ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-height: var(--alvo-toque);
+  padding: var(--espaco-2) var(--espaco-4);
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-total);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-medio);
+  text-decoration: none; /* os chips também podem ser ligações <a> */
+  box-shadow: var(--sombra-1);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--duracao-rapida) var(--curva-suave),
+    border-color var(--duracao-rapida) var(--curva-suave),
+    background-color var(--duracao-rapida) var(--curva-suave),
+    color var(--duracao-rapida) var(--curva-suave);
+}
+
+@media (hover: hover) {
+  .chip:hover {
+    transform: translateY(-1px);
+    border-color: var(--cor-primaria);
+    color: var(--cor-primaria);
+  }
+}
+
+.chip:active {
+  transform: scale(0.97);
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--cor-primaria-suave);
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+}
+
+.chip .icone {
+  color: var(--cor-primaria);
+}

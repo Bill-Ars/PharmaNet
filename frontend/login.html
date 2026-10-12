@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Entrada para operadores de farmácia e administradores do FarmaRede." />
+    <meta name="theme-color" content="#f3f6f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1316" media="(prefers-color-scheme: dark)" />
+    <title>Entrar · FarmaRede</title>
+
+    <!-- Aplica o tema antes de a página aparecer, para não «piscar» em branco no modo escuro. -->
+    <script>
+      {
+        let tema = null;
+        try {
+          tema = localStorage.getItem('farmarede-tema');
+        } catch {}
+        if (!tema) tema = matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+        document.documentElement.dataset.tema = tema;
+      }
+      // Uma transição entre páginas interrompida (ex.: redirecção logo ao abrir) não é um erro.
+      for (const momento of ['pageswap', 'pagereveal']) {
+        addEventListener(momento, (evento) => {
+          const transicao = evento.viewTransition;
+          if (!transicao) return;
+          for (const promessa of [transicao.ready, transicao.finished, transicao.updateCallbackDone]) {
+            promessa?.catch(() => {});
+          }
+        });
+      }
+    </script>
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <!-- A fonte é pedida já, em paralelo com o CSS (ver css/base/tipografia.css). -->
+    <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/paginas/login.css" />
+    <script type="module" src="js/paginas/login.js"></script>
+  </head>
+
+  <body>
+    <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
+    <!-- A marca aparece logo, sem esperar pelo JS; navegacao.js troca este bloco pelo cabeçalho completo. -->
+    <div id="navegacao" class="cabecalho-lugar">
+      <div class="contentor cabecalho__interior">
+        <a class="marca" href="index.html" aria-label="FarmaRede — página inicial">
+          <span class="marca__simbolo">
+            <svg class="icone" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z"/></svg>
+          </span>
+          <span>Farma<span class="marca__realce">Rede</span></span>
+        </a>
+      </div>
+    </div>
+
+    <main id="conteudo" class="contentor login anim-entrar">
+      <section class="cartao login__cartao" id="cartao-login" aria-labelledby="titulo-login">
+        <div class="login__cabecalho">
+          <span class="marca__simbolo login__simbolo"><span data-icone="cruz" data-tamanho="24"></span></span>
+          <p class="sobretitulo">Área reservada</p>
+          <h1 class="login__titulo" id="titulo-login">Entrar no FarmaRede</h1>
+          <p class="texto-suave">Para operadores de farmácia e administradores da rede.</p>
+        </div>
+
+        <div id="zona-avisos" aria-live="polite"></div>
+
+        <form class="login__formulario" id="formulario-login" novalidate>
+          <div class="campo">
+            <label class="campo__rotulo" for="utilizador">Utilizador</label>
+            <input
+              class="campo__entrada"
+              id="utilizador"
+              name="utilizador"
+              type="text"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false"
+              required
+            />
+          </div>
+
+          <div class="campo">
+            <label class="campo__rotulo" for="palavra-passe">Palavra-passe</label>
+            <div class="campo__grupo">
+              <input
+                class="campo__entrada"
+                id="palavra-passe"
+                name="palavraPasse"
+                type="password"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="campo__botao-interno"
+                id="mostrar-palavra"
+                aria-label="Mostrar palavra-passe"
+                aria-pressed="false"
+                aria-controls="palavra-passe"
+              >
+                <span data-icone="olho"></span>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="botao botao--bloco" id="botao-entrar">
+            <span data-icone="entrar"></span>Entrar
+          </button>
+        </form>
+
+        <p class="login__nota">
+          <span data-icone="cadeado" data-tamanho="14"></span>
+          A sessão fica só neste separador e termina ao fechá-lo.
+        </p>
+
+        <!-- Só com o simulador ligado (o login.js mostra-a). -->
+        <p class="login__teste" id="nota-simulador" hidden>
+          <span class="sobretitulo">Simulador</span>
+          <span>operador1 / teste123 · admin / admin123</span>
+        </p>
+      </section>
+    </main>
+
+    <div class="notificacoes" id="notificacoes" role="status" aria-live="polite"></div>
+  </body>
+</html>

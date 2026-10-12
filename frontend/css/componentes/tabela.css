@@ -1,0 +1,171 @@
+/*
+ * tabela.css — camada «componentes».
+ * Tabela de dados (.tabela). No telemóvel cada linha passa a ser um cartão:
+ * cada célula mostra o seu rótulo, lido do atributo data-rotulo.
+ * A linha acabada de gravar recebe .tabela__linha--gravada (fundo verde que desvanece).
+ */
+.tabela-contentor {
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-grande);
+  background: var(--cor-superficie);
+  box-shadow: var(--sombra-1);
+  overflow: hidden;
+}
+
+.tabela {
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabela th {
+  padding: var(--espaco-3) var(--espaco-4);
+  background: var(--cor-superficie-2);
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-forte);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tabela td {
+  padding: var(--espaco-3) var(--espaco-4);
+  border-top: var(--borda-fina) solid var(--cor-borda);
+  vertical-align: middle;
+}
+
+.tabela__linha {
+  transition: background-color var(--duracao-rapida) var(--curva-suave);
+}
+
+@media (hover: hover) {
+  .tabela__linha:hover {
+    background: var(--cor-superficie-2);
+  }
+}
+
+.tabela__nome {
+  font-weight: var(--peso-forte);
+}
+
+.tabela__numero {
+  text-align: right;
+}
+
+.tabela__quantidade {
+  font-size: var(--texto-medio);
+  font-weight: var(--peso-titulo);
+}
+
+.tabela__accoes {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tabela__accoes-grupo {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--espaco-2);
+}
+
+/* Linha em edição: fundo da cor principal suave para se ver onde se está. */
+.tabela__linha--a-editar,
+.tabela__linha--a-editar:hover {
+  background: var(--cor-primaria-suave);
+}
+
+.tabela__linha--gravada {
+  animation: desvanecer-sucesso var(--duracao-desvanecer) var(--curva-suave);
+}
+
+/* ---------- Telemóvel: cada linha é um cartão ---------- */
+@media (max-width: 767.98px) {
+  .tabela-contentor {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .tabela thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .tabela,
+  .tabela tbody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-3);
+  }
+
+  .tabela tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--espaco-2) var(--espaco-4);
+    padding: var(--espaco-4);
+    border: var(--borda-fina) solid var(--cor-borda);
+    border-radius: var(--raio-grande);
+    background: var(--cor-superficie);
+    box-shadow: var(--sombra-1);
+  }
+
+  .tabela td {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-half);
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+
+  /* Etiquetas (ex.: «v4») mantêm o seu tamanho, sem esticar pela célula. */
+  .tabela td > .etiqueta {
+    align-self: flex-start;
+  }
+
+  /* O rótulo de cada célula, lido do HTML. */
+  .tabela td[data-rotulo]::before {
+    content: attr(data-rotulo);
+    font-size: var(--texto-pequeno);
+    font-weight: var(--peso-medio);
+    color: var(--cor-texto-suave);
+  }
+
+  /* O nome ocupa a linha toda, como título do cartão. */
+  .tabela td.tabela__nome {
+    grid-column: 1 / -1;
+    font-size: var(--texto-medio);
+  }
+
+  .tabela td.tabela__nome::before {
+    content: none;
+  }
+
+  .tabela td.tabela__accoes {
+    grid-column: 1 / -1;
+    padding-top: var(--espaco-3);
+    border-top: var(--borda-fina) solid var(--cor-borda);
+  }
+
+  .tabela__accoes-grupo {
+    justify-content: stretch;
+    width: 100%;
+  }
+
+  .tabela__accoes-grupo > .botao {
+    flex: 1;
+  }
+
+  .tabela__accoes-grupo > .passos {
+    flex-basis: 100%;
+    justify-content: space-between;
+  }
+
+  .tabela__accoes-grupo > .passos .passos__entrada {
+    flex: 1;
+  }
+}

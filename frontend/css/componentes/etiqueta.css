@@ -1,0 +1,58 @@
+/*
+ * etiqueta.css — camada «componentes».
+ * Pequenas «pílulas» com ícone e texto que dizem a origem ou o estado de um dado.
+ * A cor nunca está sozinha: há sempre uma palavra («líder», «réplica»…).
+ */
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-1);
+  max-width: 100%;
+  padding: var(--espaco-1) var(--espaco-3);
+  border-radius: var(--raio-total);
+  background: var(--cor-estado-suave, var(--cor-neutra-suave));
+  color: var(--cor-estado, var(--cor-texto-suave));
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-forte);
+  line-height: var(--altura-linha-apertada);
+  transition:
+    background-color var(--duracao-lenta) var(--curva-suave),
+    color var(--duracao-lenta) var(--curva-suave);
+}
+
+.etiqueta .icone {
+  flex-shrink: 0;
+}
+
+/* Variantes como classes BEM; cada uma escolhe a sua cor de estado. */
+.etiqueta--lider {
+  --cor-estado: var(--cor-sucesso);
+  --cor-estado-suave: var(--cor-sucesso-suave);
+}
+
+.etiqueta--replica {
+  --cor-estado: var(--cor-aviso);
+  --cor-estado-suave: var(--cor-aviso-suave);
+}
+
+.etiqueta--indisponivel {
+  --cor-estado: var(--cor-neutra);
+  --cor-estado-suave: var(--cor-neutra-suave);
+}
+
+.etiqueta--erro {
+  --cor-estado: var(--cor-erro);
+  --cor-estado-suave: var(--cor-erro-suave);
+}
+
+.etiqueta--primaria {
+  --cor-estado: var(--cor-primaria);
+  --cor-estado-suave: var(--cor-primaria-suave);
+}
+
+/* Etiqueta só com contorno, para informação secundária (ex.: «v4»). */
+.etiqueta--contorno {
+  background: transparent;
+  color: var(--cor-texto-suave);
+  box-shadow: inset 0 0 0 var(--borda-fina) var(--cor-borda-forte);
+}

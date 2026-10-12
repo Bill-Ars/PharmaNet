@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="description" content="Guia de estilo do FarmaRede: todos os componentes e estados." />
+    <meta name="theme-color" content="#f3f6f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b1316" media="(prefers-color-scheme: dark)" />
+    <title>Guia de estilo · FarmaRede</title>
+
+    <!-- Aplica o tema antes de a página aparecer, para não «piscar» em branco no modo escuro. -->
+    <script>
+      {
+        let tema = null;
+        try {
+          tema = localStorage.getItem('farmarede-tema');
+        } catch {}
+        if (!tema) tema = matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+        document.documentElement.dataset.tema = tema;
+      }
+      // Uma transição entre páginas interrompida (ex.: redirecção logo ao abrir) não é um erro.
+      for (const momento of ['pageswap', 'pagereveal']) {
+        addEventListener(momento, (evento) => {
+          const transicao = evento.viewTransition;
+          if (!transicao) return;
+          for (const promessa of [transicao.ready, transicao.finished, transicao.updateCallbackDone]) {
+            promessa?.catch(() => {});
+          }
+        });
+      }
+    </script>
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <!-- A fonte é pedida já, em paralelo com o CSS (ver css/base/tipografia.css). -->
+    <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/paginas/guia.css" />
+    <script type="module" src="js/paginas/guia.js"></script>
+  </head>
+
+  <body>
+    <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
+    <!-- A marca aparece logo, sem esperar pelo JS; navegacao.js troca este bloco pelo cabeçalho completo. -->
+    <div id="navegacao" class="cabecalho-lugar">
+      <div class="contentor cabecalho__interior">
+        <a class="marca" href="index.html" aria-label="FarmaRede — página inicial">
+          <span class="marca__simbolo">
+            <svg class="icone" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z"/></svg>
+          </span>
+          <span>Farma<span class="marca__realce">Rede</span></span>
+        </a>
+      </div>
+    </div>
+
+    <main class="contentor pagina anim-entrar" id="conteudo">
+      <!-- ============================== Topo ============================== -->
+      <section class="guia__topo" aria-labelledby="titulo-guia">
+        <h1 id="titulo-guia">Guia de estilo</h1>
+        <p class="seccao__subtitulo">
+          Todos os componentes do FarmaRede, em todos os estados, numa só página. Use o botão do
+          canto superior direito para ver o modo escuro. Só para desenvolvimento: não aparece no
+          menu.
+        </p>
+        <nav class="guia__indice" aria-label="Secções do guia">
+          <a class="chip" href="#cores">Cores</a>
+          <a class="chip" href="#tipografia">Tipografia</a>
+          <a class="chip" href="#botoes">Botões</a>
+          <a class="chip" href="#campos">Campos</a>
+          <a class="chip" href="#etiquetas">Etiquetas</a>
+          <a class="chip" href="#farmacias">Cartão de farmácia</a>
+          <a class="chip" href="#esqueletos">Esqueletos</a>
+          <a class="chip" href="#avisos">Avisos</a>
+          <a class="chip" href="#tabela">Tabela</a>
+          <a class="chip" href="#nos">Cartão de nó</a>
+          <a class="chip" href="#metricas">Métricas</a>
+          <a class="chip" href="#vazio">Estado vazio</a>
+          <a class="chip" href="#modal">Modal</a>
+        </nav>
+      </section>
+
+      <!-- ============================== Cores ============================== -->
+      <section class="seccao guia__seccao" id="cores" aria-labelledby="titulo-cores">
+        <h2 id="titulo-cores">Cores</h2>
+        <p class="guia__nota">
+          Cada amostra lê a variável de <code>tokens.css</code>. Mude de tema para ver os valores
+          do modo escuro.
+        </p>
+        <div class="guia__cores" id="amostras-cor"></div>
+      </section>
+
+      <!-- ============================== Tipografia ============================== -->
+      <section class="seccao guia__seccao" id="tipografia" aria-labelledby="titulo-tipografia">
+        <h2 id="titulo-tipografia">Tipografia</h2>
+        <div class="cartao guia__tipos">
+          <p class="texto-destaque numeros-tabulares">412 ms</p>
+          <p class="guia__titulo-amostra">Encontre o seu medicamento</p>
+          <h3>Título de cartão — Farmácia 1</h3>
+          <p>
+            Texto normal. A pesquisa pergunta às três farmácias ao mesmo tempo e mostra de onde
+            veio cada resposta.
+          </p>
+          <p class="texto-suave">Texto secundário em cinzento, para informação de apoio.</p>
+          <p><small>Texto pequeno: «Coordenado pelo nó B · 412 ms».</small></p>
+          <p><a href="#conteudo">Ligação de exemplo</a> e <code>codigo</code> no meio do texto.</p>
+        </div>
+      </section>
+
+      <!-- ============================== Botões ============================== -->
+      <section class="seccao guia__seccao" id="botoes" aria-labelledby="titulo-botoes">
+        <h2 id="titulo-botoes">Botões</h2>
+        <div class="grelha">
+          <div class="guia__amostra">
+            <p class="guia__legenda">Variantes</p>
+            <div class="fila">
+              <button type="button" class="botao"><span data-icone="pesquisa"></span>Pesquisar</button>
+              <button type="button" class="botao botao--secundario">Cancelar</button>
+              <button type="button" class="botao botao--fantasma">
+                <span data-icone="recarregar"></span>Recarregar
+              </button>
+              <button type="button" class="botao botao--perigo">
+                <span data-icone="repor"></span>Repor
+              </button>
+            </div>
+          </div>
+          <div class="guia__amostra">
+            <p class="guia__legenda">Estados e formas</p>
+            <div class="fila">
+              <button type="button" class="botao" id="botao-carregar">Entrar</button>
+              <button type="button" class="botao" disabled>Desactivado</button>
+              <button type="button" class="botao botao--secundario botao--icone" aria-label="Editar">
+                <span data-icone="editar"></span>
+              </button>
+              <button type="button" class="botao botao--secundario botao--pequeno">
+                <span data-icone="editar" data-tamanho="16"></span>Editar
+              </button>
+            </div>
+            <p class="guia__nota">Carregue em «Entrar» para ver o estado «a carregar».</p>
+          </div>
+          <div class="guia__amostra">
+            <p class="guia__legenda">Chips de atalho</p>
+            <div class="fila">
+              <button type="button" class="chip"><span data-icone="comprimido" data-tamanho="16"></span>Paracetamol</button>
+              <button type="button" class="chip"><span data-icone="comprimido" data-tamanho="16"></span>Ibuprofeno</button>
+              <button type="button" class="chip" aria-pressed="true"><span data-icone="comprimido" data-tamanho="16"></span>Amoxicilina</button>
+              <button type="button" class="chip"><span data-icone="comprimido" data-tamanho="16"></span>Metformina</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== Campos ============================== -->
+      <section class="seccao guia__seccao" id="campos" aria-labelledby="titulo-campos">
+        <h2 id="titulo-campos">Campos</h2>
+
+        <div class="guia__amostra">
+          <p class="guia__legenda">Pesquisa grande (com sugestões)</p>
+          <form class="campo-pesquisa campo-pesquisa--com-botao" role="search" id="guia-form-pesquisa">
+            <label class="visualmente-oculto" for="guia-pesquisa">Nome do medicamento</label>
+            <span class="campo-pesquisa__icone" data-icone="pesquisa" data-tamanho="22"></span>
+            <input
+              class="campo__entrada"
+              id="guia-pesquisa"
+              type="search"
+              list="guia-catalogo"
+              placeholder="Ex.: paracetamol"
+              autocomplete="off"
+            />
+            <datalist id="guia-catalogo">
+              <option value="Paracetamol"></option>
+              <option value="Ibuprofeno"></option>
+              <option value="Amoxicilina"></option>
+              <option value="Metformina"></option>
+            </datalist>
+            <button type="submit" class="botao campo-pesquisa__botao">Pesquisar</button>
+          </form>
+        </div>
+
+        <form class="grelha" id="guia-form-campos" novalidate>
+          <div class="campo">
+            <label class="campo__rotulo" for="guia-utilizador">Utilizador</label>
+            <input class="campo__entrada" id="guia-utilizador" type="text" autocomplete="off" placeholder="operador1" aria-describedby="guia-utilizador-ajuda" />
+            <p class="campo__ajuda" id="guia-utilizador-ajuda">O nome que recebeu do administrador.</p>
+          </div>
+
+          <div class="campo">
+            <label class="campo__rotulo" for="guia-palavra">Palavra-passe</label>
+            <div class="campo__grupo">
+              <input class="campo__entrada" id="guia-palavra" type="password" autocomplete="off" value="teste123" />
+              <button
+                type="button"
+                class="campo__botao-interno"
+                id="mostrar-palavra"
+                aria-label="Mostrar palavra-passe"
+                aria-pressed="false"
+                aria-controls="guia-palavra"
+              >
+                <span data-icone="olho"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label class="campo__rotulo" for="guia-quantidade">Quantidade (com erro)</label>
+            <input
+              class="campo__entrada"
+              id="guia-quantidade"
+              type="text"
+              inputmode="numeric"
+              value="-3"
+              aria-invalid="true"
+              aria-describedby="guia-quantidade-erro"
+            />
+            <p class="campo__erro" id="guia-quantidade-erro">
+              <span data-icone="circuloX" data-tamanho="16"></span>
+              A quantidade tem de ser um número inteiro igual ou maior que 0.
+            </p>
+          </div>
+
+          <div class="campo">
+            <label class="campo__rotulo" for="guia-algoritmo">Algoritmo do balanceador</label>
+            <select class="campo__entrada" id="guia-algoritmo">
+              <option>Round-robin</option>
+              <option>Menos ligações</option>
+              <option>Round-robin com pesos</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label class="campo__rotulo" for="guia-desactivado">Campo desactivado</label>
+            <input class="campo__entrada" id="guia-desactivado" type="text" value="Só de leitura" disabled />
+          </div>
+
+          <div class="campo">
+            <span class="campo__rotulo" id="guia-passos-rotulo">Número com − e +</span>
+            <div class="passos" data-passos>
+              <button type="button" class="passos__botao" data-passo="-1" aria-label="Diminuir">
+                <span data-icone="menos"></span>
+              </button>
+              <input class="passos__entrada" type="number" inputmode="numeric" min="0" step="1" value="12" aria-labelledby="guia-passos-rotulo" />
+              <button type="button" class="passos__botao" data-passo="1" aria-label="Aumentar">
+                <span data-icone="mais"></span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ============================== Etiquetas ============================== -->
+      <section class="seccao guia__seccao" id="etiquetas" aria-labelledby="titulo-etiquetas">
+        <h2 id="titulo-etiquetas">Etiquetas</h2>
+        <div class="fila">
+          <span class="etiqueta etiqueta--lider"><span data-icone="coroa" data-tamanho="14"></span>líder</span>
+          <span class="etiqueta etiqueta--replica"><span data-icone="copia" data-tamanho="14"></span>réplica — pode estar desactualizado</span>
+          <span class="etiqueta etiqueta--indisponivel"><span data-icone="semLigacao" data-tamanho="14"></span>sem resposta</span>
+          <span class="etiqueta etiqueta--erro"><span data-icone="alerta" data-tamanho="14"></span>conflito</span>
+          <span class="etiqueta etiqueta--primaria"><span data-icone="servidor" data-tamanho="14"></span>nó B</span>
+          <span class="etiqueta etiqueta--contorno">v4</span>
+        </div>
+      </section>
+
+      <!-- ============================== Cartão de farmácia ============================== -->
+      <section class="seccao guia__seccao" id="farmacias" aria-labelledby="titulo-farmacias">
+        <div class="seccao__cabecalho">
+          <h2 id="titulo-farmacias">Cartão de farmácia — os seis estados</h2>
+          <button type="button" class="botao botao--secundario botao--pequeno" id="repetir-cascata">
+            <span data-icone="recarregar" data-tamanho="16"></span>Repetir entrada em cascata
+          </button>
+        </div>
+
+        <div class="grelha-3" id="cartoes-farmacia">
+          <!-- 1. Líder, disponível -->
+          <article class="cartao cartao-farmacia" data-estado="disponivel" data-origem="lider">
+            <header class="cartao-farmacia__cabecalho">
+              <div>
+                <p class="cartao-farmacia__sobretitulo">Paracetamol 500 mg</p>
+                <h3 class="cartao-farmacia__titulo">Farmácia 1</h3>
+              </div>
+              <span class="cartao-farmacia__indice" aria-hidden="true">01</span>
+            </header>
+            <p class="cartao-farmacia__estado"><span class="indicador"></span>Disponível</p>
+            <footer class="cartao-farmacia__rodape">
+              <div class="rota" role="img" aria-label="Respondeu o líder, nó A">
+                <span class="rota__rotulo">Rota</span>
+                <span class="rota__no" data-estado="lider" data-papel="respondeu">A</span>
+                <span class="rota__ligacao"></span>
+                <span class="rota__no">B</span>
+              </div>
+              <span class="etiqueta etiqueta--lider"><span data-icone="coroa" data-tamanho="14"></span>líder</span>
+            </footer>
+          </article>
+
+          <!-- 2. Líder, sem stock -->
+          <article class="cartao cartao-farmacia" data-estado="sem-stock" data-origem="lider">
+            <header class="cartao-farmacia__cabecalho">
+              <div>
+                <p class="cartao-farmacia__sobretitulo">Paracetamol 500 mg</p>
+                <h3 class="cartao-farmacia__titulo">Farmácia 2</h3>
+              </div>
+              <span class="cartao-farmacia__indice" aria-hidden="true">02</span>
+            </header>
+            <p class="cartao-farmacia__estado"><span class="indicador"></span>Sem stock</p>
+            <footer class="cartao-farmacia__rodape">
+              <div class="rota" role="img" aria-label="Respondeu o líder, nó B">
+                <span class="rota__rotulo">Rota</span>
+                <span class="rota__no" data-estado="lider" data-papel="respondeu">B</span>
+                <span class="rota__ligacao"></span>
+                <span class="rota__no">C</span>
+              </div>
+              <span class="etiqueta etiqueta--lider"><span data-icone="coroa" data-tamanho="14"></span>líder</span>
+            </footer>
+          </article>
+
+          <!-- 3. Réplica, disponível -->
+          <article class="cartao cartao-farmacia" data-estado="disponivel" data-origem="replica">
+            <header class="cartao-farmacia__cabecalho">
+              <div>
+                <p class="cartao-farmacia__sobretitulo">Paracetamol 500 mg</p>
+                <h3 class="cartao-farmacia__titulo">Farmácia 3</h3>
+              </div>
+              <span class="cartao-farmacia__indice" aria-hidden="true">03</span>
+            </header>
+            <p class="cartao-farmacia__estado"><span class="indicador"></span>Disponível</p>
+            <footer class="cartao-farmacia__rodape">
+              <div class="rota" role="img" aria-label="O líder, nó C, não respondeu; respondeu a réplica, nó A">
+                <span class="rota__rotulo">Rota</span>
+                <span class="rota__no" data-papel="falhou">C</span>
+                <span class="rota__ligacao rota__ligacao--percorrida"></span>
+                <span class="rota__no" data-estado="replica" data-papel="respondeu">A</span>
+              </div>
+              <span class="etiqueta etiqueta--replica"><span data-icone="copia" data-tamanho="14"></span>réplica — pode estar desactualizado</span>
+            </footer>
+          </article>
+
+          <!-- 4. Réplica, sem stock -->
+          <article class="cartao cartao-farmacia" data-estado="sem-stock" data-origem="replica">
+            <header class="cartao-farmacia__cabecalho">
+              <div>
+                <p class="cartao-farmacia__sobretitulo">Paracetamol 500 mg</p>
+                <h3 class="cartao-farmacia__titulo">Farmácia 1</h3>
+              </div>
+              <span class="cartao-farmacia__indice" aria-hidden="true">01</span>
+            </header>
+            <p class="cartao-farmacia__estado"><span class="indicador"></span>Sem stock</p>
+            <footer class="cartao-farmacia__rodape">
+              <div class="rota" role="img" aria-label="O líder, nó A, não respondeu; respondeu a réplica, nó B">
+                <span class="rota__rotulo">Rota</span>
+                <span class="rota__no" data-papel="falhou">A</span>
+                <span class="rota__ligacao rota__ligacao--percorrida"></span>
+                <span class="rota__no" data-estado="replica" data-papel="respondeu">B</span>
+              </div>
+              <span class="etiqueta etiqueta--replica"><span data-icone="copia" data-tamanho="14"></span>réplica — pode estar desactualizado</span>
+            </footer>
+          </article>
+
+          <!-- 5. Indisponível (nunca «sem stock») -->
+          <article class="cartao cartao-farmacia" data-estado="indisponivel" data-origem="indisponivel">
+            <header class="cartao-farmacia__cabecalho">
+              <div>
+                <p class="cartao-farmacia__sobretitulo">Paracetamol 500 mg</p>
+                <h3 class="cartao-farmacia__titulo">Farmácia 2</h3>
+              </div>
+              <span class="cartao-farmacia__indice" aria-hidden="true">02</span>
+            </header>
+            <p class="cartao-farmacia__estado"><span class="indicador"></span>Não foi possível consultar</p>
+            <footer class="cartao-farmacia__rodape">
+              <div class="rota" role="img" aria-label="Nem o líder, nó B, nem a réplica, nó C, responderam">
+                <span class="rota__rotulo">Rota</span>
+                <span class="rota__no" data-papel="falhou">B</span>
+                <span class="rota__ligacao"></span>
+                <span class="rota__no" data-papel="falhou">C</span>
+              </div>
+              <span class="etiqueta etiqueta--indisponivel"><span data-icone="semLigacao" data-tamanho="14"></span>sem resposta</span>
+            </footer>
+          </article>
+
+          <!-- 6. A carregar (esqueleto) -->
+          <article class="cartao cartao-farmacia cartao-farmacia--esqueleto" aria-busy="true">
+            <span class="visualmente-oculto">A consultar a farmácia…</span>
+            <div class="cartao-farmacia__cabecalho" aria-hidden="true">
+              <div class="pilha">
+                <span class="esqueleto esqueleto--texto esqueleto--rotulo"></span>
+                <span class="esqueleto esqueleto--titulo"></span>
+              </div>
+              <span class="esqueleto esqueleto--quadrado"></span>
+            </div>
+            <span class="esqueleto esqueleto--titulo" aria-hidden="true"></span>
+            <div class="cartao-farmacia__rodape" aria-hidden="true">
+              <span class="esqueleto esqueleto--rota"></span>
+              <span class="esqueleto esqueleto--etiqueta"></span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================== Esqueletos ============================== -->
+      <section class="seccao guia__seccao" id="esqueletos" aria-labelledby="titulo-esqueletos">
+        <h2 id="titulo-esqueletos">Esqueletos</h2>
+        <div class="cartao pilha" aria-busy="true">
+          <span class="visualmente-oculto">A carregar…</span>
+          <span class="esqueleto esqueleto--titulo" aria-hidden="true"></span>
+          <span class="esqueleto esqueleto--texto" aria-hidden="true"></span>
+          <span class="esqueleto esqueleto--texto esqueleto--medio" aria-hidden="true"></span>
+          <span class="esqueleto esqueleto--texto esqueleto--curto" aria-hidden="true"></span>
+        </div>
+      </section>
+
+      <!-- ============================== Avisos ============================== -->
+      <section class="seccao guia__seccao" id="avisos" aria-labelledby="titulo-avisos">
+        <div class="seccao__cabecalho">
+          <h2 id="titulo-avisos">Avisos e notificações</h2>
+          <div class="fila">
+            <button type="button" class="botao botao--secundario botao--pequeno" id="mostrar-notificacao">
+              Mostrar notificação
+            </button>
+            <button type="button" class="botao botao--secundario botao--pequeno" id="mostrar-notificacao-erro">
+              Notificação de erro
+            </button>
+          </div>
+        </div>
+
+        <div class="aviso aviso--faixa aviso--aviso" role="status">
+          <span class="aviso__icone" data-icone="cadeado"></span>
+          <div class="aviso__corpo">
+            <p class="aviso__texto"><strong>Esta farmácia está só de leitura:</strong> o seu nó líder não responde.</p>
+          </div>
+        </div>
+
+        <div class="grelha">
+          <div class="aviso aviso--erro">
+            <span class="aviso__icone" data-icone="semLigacao"></span>
+            <div class="aviso__corpo">
+              <p class="aviso__titulo">Não foi possível pesquisar agora. Tente de novo.</p>
+              <div class="aviso__accoes">
+                <button type="button" class="botao botao--secundario botao--pequeno">
+                  <span data-icone="recarregar" data-tamanho="16"></span>Tentar de novo
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="aviso aviso--erro" id="aviso-409">
+            <span class="aviso__icone" data-icone="alerta"></span>
+            <div class="aviso__corpo">
+              <p class="aviso__titulo">Outra pessoa alterou este medicamento.</p>
+              <p class="aviso__texto">Valor actual: 9.</p>
+              <div class="aviso__accoes">
+                <button type="button" class="botao botao--secundario botao--pequeno">
+                  <span data-icone="recarregar" data-tamanho="16"></span>Recarregar
+                </button>
+                <button type="button" class="botao botao--fantasma botao--pequeno" id="abanar-409">
+                  Ver o abanão
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="aviso aviso--aviso">
+            <span class="aviso__icone" data-icone="relogio"></span>
+            <div class="aviso__corpo">
+              <p class="aviso__titulo">O servidor pode estar a arrancar.</p>
+              <p class="aviso__texto">Pode demorar até 1 minuto.</p>
+            </div>
+          </div>
+
+          <div class="aviso">
+            <span class="aviso__icone" data-icone="info"></span>
+            <div class="aviso__corpo">
+              <p class="aviso__texto">
+                Esta pesquisa ajuda a localizar o medicamento, mas não garante que ainda exista
+                quando chegar à farmácia.
+              </p>
+            </div>
+          </div>
+
+          <div class="aviso aviso--sucesso">
+            <span class="aviso__icone" data-icone="circuloCerto"></span>
+            <div class="aviso__corpo">
+              <p class="aviso__titulo">Gravado.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== Tabela ============================== -->
+      <section class="seccao guia__seccao" id="tabela" aria-labelledby="titulo-tabela">
+        <div class="seccao__cabecalho">
+          <h2 id="titulo-tabela">Tabela de stock</h2>
+          <button type="button" class="botao botao--secundario botao--pequeno" id="simular-gravacao">
+            Simular gravação
+          </button>
+        </div>
+        <p class="guia__nota">Abaixo de 768 px cada linha passa a ser um cartão.</p>
+
+        <div class="tabela-contentor">
+          <table class="tabela">
+            <caption class="visualmente-oculto">Stock da Farmácia 1</caption>
+            <thead>
+              <tr>
+                <th scope="col">Medicamento</th>
+                <th scope="col" class="tabela__numero">Quantidade</th>
+                <th scope="col">Versão</th>
+                <th scope="col" class="tabela__accoes"><span class="visualmente-oculto">Acções</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="tabela__linha" id="linha-paracetamol">
+                <td class="tabela__nome">Paracetamol 500 mg</td>
+                <td class="tabela__numero" data-rotulo="Quantidade"><span class="tabela__quantidade">12</span></td>
+                <td data-rotulo="Versão"><span class="etiqueta etiqueta--contorno">v4</span></td>
+                <td class="tabela__accoes">
+                  <div class="tabela__accoes-grupo">
+                    <button type="button" class="botao botao--secundario botao--pequeno">
+                      <span data-icone="editar" data-tamanho="16"></span>Editar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="tabela__linha tabela__linha--a-editar">
+                <td class="tabela__nome">Amoxicilina 500 mg</td>
+                <td class="tabela__numero" data-rotulo="Quantidade">
+                  <div class="passos" data-passos>
+                    <button type="button" class="passos__botao" data-passo="-1" aria-label="Diminuir quantidade de Amoxicilina 500 mg">
+                      <span data-icone="menos"></span>
+                    </button>
+                    <input class="passos__entrada" type="number" inputmode="numeric" min="0" step="1" value="9" aria-label="Quantidade de Amoxicilina 500 mg" />
+                    <button type="button" class="passos__botao" data-passo="1" aria-label="Aumentar quantidade de Amoxicilina 500 mg">
+                      <span data-icone="mais"></span>
+                    </button>
+                  </div>
+                </td>
+                <td data-rotulo="Versão"><span class="etiqueta etiqueta--contorno">v2</span></td>
+                <td class="tabela__accoes">
+                  <div class="tabela__accoes-grupo">
+                    <button type="button" class="botao botao--pequeno"><span data-icone="certo" data-tamanho="16"></span>Gravar</button>
+                    <button type="button" class="botao botao--secundario botao--pequeno">Cancelar</button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="tabela__linha">
+                <td class="tabela__nome">Ibuprofeno 400 mg</td>
+                <td class="tabela__numero" data-rotulo="Quantidade"><span class="tabela__quantidade">0</span></td>
+                <td data-rotulo="Versão"><span class="etiqueta etiqueta--contorno">v7</span></td>
+                <td class="tabela__accoes">
+                  <div class="tabela__accoes-grupo">
+                    <button type="button" class="botao botao--secundario botao--pequeno">
+                      <span data-icone="editar" data-tamanho="16"></span>Editar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================== Cartão de nó ============================== -->
+      <section class="seccao guia__seccao" id="nos" aria-labelledby="titulo-nos">
+        <div class="seccao__cabecalho">
+          <h2 id="titulo-nos">Cartão de nó</h2>
+          <button type="button" class="botao botao--secundario botao--pequeno" id="mudar-no">
+            Mudar estado do nó B
+          </button>
+        </div>
+
+        <div class="guia__nos">
+          <article class="cartao cartao-no" data-estado="vivo">
+            <header class="cartao-no__cabecalho">
+              <div class="cartao-no__identidade">
+                <span class="cartao-no__monograma" aria-hidden="true">A</span>
+                <div>
+                  <p class="cartao-no__sobretitulo">Nó</p>
+                  <h3 class="cartao-no__nome">Nó A</h3>
+                </div>
+              </div>
+              <span class="cartao-no__estado"><span class="ponto-estado"></span>Vivo</span>
+            </header>
+            <dl class="cartao-no__dados">
+              <div><dt>Modo</dt><dd>normal</dd></div>
+              <div><dt>Último sinal</dt><dd>há 1 s</dd></div>
+              <div><dt>Líder de</dt><dd>Farmácia 1</dd></div>
+              <div><dt>Réplica de</dt><dd>Farmácia 3</dd></div>
+            </dl>
+          </article>
+
+          <article class="cartao cartao-no" data-estado="lento" id="cartao-no-b">
+            <header class="cartao-no__cabecalho">
+              <div class="cartao-no__identidade">
+                <span class="cartao-no__monograma" aria-hidden="true">B</span>
+                <div>
+                  <p class="cartao-no__sobretitulo">Nó</p>
+                  <h3 class="cartao-no__nome">Nó B</h3>
+                </div>
+              </div>
+              <span class="cartao-no__estado"><span class="ponto-estado"></span><span data-campo="estado">Lento</span></span>
+            </header>
+            <dl class="cartao-no__dados">
+              <div><dt>Modo</dt><dd data-campo="modo">lento</dd></div>
+              <div><dt>Último sinal</dt><dd data-campo="sinal">há 3 s</dd></div>
+              <div><dt>Líder de</dt><dd>Farmácia 2</dd></div>
+              <div><dt>Réplica de</dt><dd>Farmácia 1</dd></div>
+            </dl>
+          </article>
+
+          <article class="cartao cartao-no" data-estado="indisponivel">
+            <header class="cartao-no__cabecalho">
+              <div class="cartao-no__identidade">
+                <span class="cartao-no__monograma" aria-hidden="true">C</span>
+                <div>
+                  <p class="cartao-no__sobretitulo">Nó</p>
+                  <h3 class="cartao-no__nome">Nó C</h3>
+                </div>
+              </div>
+              <span class="cartao-no__estado"><span class="ponto-estado"></span>Indisponível</span>
+            </header>
+            <dl class="cartao-no__dados">
+              <div><dt>Modo</dt><dd>parado</dd></div>
+              <div><dt>Último sinal</dt><dd>há 8 s</dd></div>
+              <div><dt>Líder de</dt><dd>Farmácia 3</dd></div>
+              <div><dt>Réplica de</dt><dd>Farmácia 2</dd></div>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================== Métricas ============================== -->
+      <section class="seccao guia__seccao" id="metricas" aria-labelledby="titulo-metricas">
+        <div class="seccao__cabecalho">
+          <h2 id="titulo-metricas">Números grandes</h2>
+          <button type="button" class="botao botao--secundario botao--pequeno" id="novos-valores">
+            Novos valores
+          </button>
+        </div>
+        <div class="grelha">
+          <div class="cartao metrica">
+            <p class="metrica__rotulo"><span data-icone="alerta" data-tamanho="16"></span>Conflitos 409</p>
+            <p class="metrica__valor" id="metrica-conflitos" data-valor="0">0</p>
+            <p class="metrica__nota">na última janela de 5 s</p>
+          </div>
+          <div class="cartao metrica">
+            <p class="metrica__rotulo"><span data-icone="relogio" data-tamanho="16"></span>Atraso da réplica</p>
+            <p class="metrica__valor">
+              <span id="metrica-atraso" data-valor="45">45</span><span class="metrica__unidade">ms</span>
+            </p>
+            <p class="metrica__nota">na última janela de 5 s</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== Estado vazio ============================== -->
+      <section class="seccao guia__seccao" id="vazio" aria-labelledby="titulo-vazio">
+        <h2 id="titulo-vazio">Estado vazio</h2>
+        <div class="cartao estado-vazio" id="estado-vazio">
+          <p class="estado-vazio__titulo">Ainda não pesquisou nada</p>
+          <p class="estado-vazio__texto">
+            Escreva o nome de um medicamento para ver onde está disponível.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================== Modal ============================== -->
+      <section class="seccao guia__seccao" id="modal" aria-labelledby="titulo-modal">
+        <h2 id="titulo-modal">Modal de confirmação</h2>
+        <div class="fila">
+          <button type="button" class="botao botao--perigo" id="abrir-modal">
+            <span data-icone="repor"></span>Repor dados de demonstração
+          </button>
+        </div>
+        <p class="guia__nota">O foco fica preso dentro do modal; Esc ou um clique fora fecham-no.</p>
+      </section>
+    </main>
+
+    <dialog class="modal" id="modal-repor" aria-labelledby="modal-repor-titulo" aria-describedby="modal-repor-texto">
+      <form method="dialog" class="modal__caixa">
+        <span class="modal__icone" data-icone="repor" data-tamanho="24"></span>
+        <h2 class="modal__titulo" id="modal-repor-titulo">Repor dados de demonstração?</h2>
+        <p class="modal__texto" id="modal-repor-texto">
+          Todas as alterações de stock nos três nós voltam aos valores iniciais. Não é possível
+          desfazer.
+        </p>
+        <div class="modal__accoes">
+          <button type="submit" class="botao botao--secundario" value="cancelar" autofocus>Cancelar</button>
+          <button type="submit" class="botao botao--perigo" value="confirmar">Repor dados</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="notificacoes" id="notificacoes" role="status" aria-live="polite"></div>
+  </body>
+</html>

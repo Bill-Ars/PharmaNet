@@ -1,0 +1,40 @@
+/*
+ * main.css — ponto de entrada do CSS.
+ * Declara a ordem das camadas de cascata e importa cada ficheiro para a sua camada.
+ * Uma regra numa camada mais à direita ganha sempre a uma camada à esquerda,
+ * seja qual for a especificidade do selector. Assim a ordem nunca depende da sorte.
+ */
+@layer reset, tokens, base, layout, componentes, paginas, utilitarios;
+
+@import url('base/reset.css') layer(reset);
+@import url('base/tokens.css') layer(tokens);
+@import url('base/tipografia.css') layer(base);
+
+@import url('layout/estrutura.css') layer(layout);
+@import url('layout/navegacao.css') layer(layout);
+
+@import url('componentes/botao.css') layer(componentes);
+@import url('componentes/campo.css') layer(componentes);
+@import url('componentes/cartao.css') layer(componentes);
+@import url('componentes/etiqueta.css') layer(componentes);
+@import url('componentes/aviso.css') layer(componentes);
+@import url('componentes/tabela.css') layer(componentes);
+@import url('componentes/esqueleto.css') layer(componentes);
+@import url('componentes/modal.css') layer(componentes);
+
+/*
+ * Os CSS das páginas (css/paginas/*.css) NÃO são importados aqui: cada HTML liga só o seu,
+ * logo a seguir a este ficheiro. Assim nenhuma página descarrega o CSS das outras.
+ * Cada um desses ficheiros põe as suas regras dentro de «@layer paginas { … }».
+ */
+
+@import url('utilitarios/animacoes.css') layer(utilitarios);
+
+/*
+ * Transições suaves entre páginas (View Transitions API).
+ * Fica fora das camadas por ser uma regra global do documento.
+ * Os navegadores que não a conhecem ignoram-na e mudam de página normalmente.
+ */
+@view-transition {
+  navigation: auto;
+}

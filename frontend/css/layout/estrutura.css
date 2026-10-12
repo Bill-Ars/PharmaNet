@@ -1,0 +1,137 @@
+/*
+ * estrutura.css — camada «layout».
+ * Contentor centrado, grelhas e secções reutilizadas por todas as páginas.
+ * Escrito primeiro para o telemóvel; as larguras maiores só acrescentam.
+ * Pontos de quebra: 768 px (tablet), 1024 px (portátil), 1440 px (ecrã grande).
+ */
+body {
+  background-image: var(--gradiente-fundo);
+  background-repeat: no-repeat;
+  /* Impede rolagem horizontal mesmo que algum elemento escape por engano. */
+  overflow-x: clip;
+}
+
+.contentor {
+  width: 100%;
+  max-width: var(--largura-maxima);
+  margin-inline: auto;
+  padding-inline: max(var(--espaco-4), env(safe-area-inset-left));
+}
+
+.pagina {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-10);
+  padding-block: var(--espaco-8) var(--espaco-12);
+}
+
+.seccao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+}
+
+.seccao__cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espaco-2) var(--espaco-4);
+}
+
+.seccao__subtitulo {
+  color: var(--cor-texto-suave);
+  max-width: var(--largura-texto);
+}
+
+/* Grelha de cartões: tantas colunas quantas couberem, cada uma com pelo menos 17 rem. */
+.grelha {
+  display: grid;
+  gap: var(--espaco-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+/* Grelha de exactamente 1 → 2 → 3 colunas, para os resultados da pesquisa e os nós. */
+.grelha-3 {
+  display: grid;
+  gap: var(--espaco-4);
+  grid-template-columns: 1fr;
+}
+
+/* Elementos empilhados na vertical. */
+.pilha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+/* Elementos lado a lado que passam à linha seguinte quando não cabem. */
+.fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espaco-3);
+}
+
+/* Rodapé comum a todas as páginas. */
+.rodape {
+  border-top: var(--borda-fina) solid var(--cor-borda);
+  padding-block: var(--espaco-6);
+  font-size: var(--texto-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+.rodape__interior {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+.rodape__nota {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espaco-2);
+  max-width: var(--largura-texto);
+}
+
+.rodape__nota .icone {
+  flex-shrink: 0;
+  margin-top: var(--espaco-half);
+  color: var(--cor-primaria);
+}
+
+@media (min-width: 768px) {
+  .contentor {
+    padding-inline: var(--espaco-6);
+  }
+
+  .rodape__interior {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .pagina {
+    gap: var(--espaco-12);
+    padding-block: var(--espaco-10) var(--espaco-16);
+  }
+
+  .grelha,
+  .grelha-3 {
+    gap: var(--espaco-5);
+  }
+
+  .grelha-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .contentor {
+    padding-inline: var(--espaco-8);
+  }
+
+  .grelha-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

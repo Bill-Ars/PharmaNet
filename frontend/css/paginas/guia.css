@@ -1,0 +1,109 @@
+/*
+ * guia.css — camada «paginas».
+ * Estilos que só o guia de estilo (guia.html) usa: amostras de cor,
+ * índice das secções e molduras à volta de cada exemplo.
+ * Não é carregado por nenhuma outra lógica; é só para desenvolvimento.
+ */
+/* Tudo na camada «paginas» (a ordem das camadas está declarada em main.css). */
+@layer paginas {
+
+.guia__topo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+.guia__indice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-2);
+}
+
+.guia__seccao {
+  scroll-margin-top: calc(var(--altura-cabecalho) + var(--espaco-4));
+}
+
+.guia__seccao > h2 {
+  padding-bottom: var(--espaco-2);
+  border-bottom: var(--borda-fina) solid var(--cor-borda);
+}
+
+.guia__nota {
+  font-size: var(--texto-pequeno);
+  color: var(--cor-texto-suave);
+}
+
+/* Moldura de um exemplo, com um título pequeno por cima. */
+.guia__amostra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+  min-width: 0;
+}
+
+.guia__legenda {
+  font-size: var(--texto-pequeno);
+  font-weight: var(--peso-forte);
+  color: var(--cor-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ---------- Amostras de cor ---------- */
+.guia__cores {
+  display: grid;
+  gap: var(--espaco-3);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+}
+
+.guia__cor {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: var(--borda-fina) solid var(--cor-borda);
+  border-radius: var(--raio-medio);
+  background: var(--cor-superficie);
+}
+
+.guia__cor-amostra {
+  height: var(--espaco-12);
+  background: var(--amostra);
+  border-bottom: var(--borda-fina) solid var(--cor-borda);
+}
+
+.guia__cor-nome {
+  padding: var(--espaco-2) var(--espaco-3);
+  font-size: var(--texto-pequeno);
+  font-family: ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Tipografia ---------- */
+.guia__tipos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+}
+
+/* Mostra o tamanho do título principal sem criar um segundo <h1> na página. */
+.guia__titulo-amostra {
+  font-size: var(--texto-titulo);
+  font-weight: var(--peso-extra);
+  line-height: var(--altura-linha-apertada);
+  letter-spacing: -0.025em;
+}
+
+/* ---------- Grelha de cartões de nó: sempre 1 → 3 colunas ---------- */
+.guia__nos {
+  display: grid;
+  gap: var(--espaco-4);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .guia__nos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+} /* fim de @layer paginas */
