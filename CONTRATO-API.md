@@ -27,7 +27,8 @@ Líderes e réplicas (anel), que o frontend usa para saber a que nó pedir:
 
 - **JSON** em todos os pedidos e respostas (`Content-Type: application/json`).
 - **CORS** nos 4 serviços, porque o site está noutro endereço:
-  - `Access-Control-Allow-Origin`: o endereço do site (ou `*` durante os testes);
+  - `Access-Control-Allow-Origin`: **`https://pharmanet-olhw.onrender.com`** (o site publicado)
+    e, para testes locais, `http://127.0.0.1:5501` (Live Server); ou `*` durante os testes;
   - `Access-Control-Allow-Headers: Content-Type, Authorization`;
   - `Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS`;
   - responder a `OPTIONS` com `204`: o navegador envia-o antes de cada `POST`/`PUT` com token.

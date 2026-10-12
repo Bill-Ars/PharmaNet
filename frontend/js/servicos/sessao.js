@@ -77,10 +77,17 @@ export function substituirPagina(endereco) {
   const ir = () => {
     if (feito) return;
     feito = true;
+    // Aviso lido pelo script do <head>: uma redirecção automática muda de página sem transição.
+    try {
+      sessionStorage.setItem('farmarede-sem-transicao', '1');
+    } catch {
+      // sem armazenamento: a transição acontece na mesma
+    }
     location.replace(endereco);
   };
   requestAnimationFrame(() => setTimeout(ir, 0));
-  setTimeout(ir, 150); // garantia: num separador escondido não há frames
+  // Garantia: se não houver frames (separador escondido, por exemplo), muda na mesma.
+  setTimeout(ir, 500);
 }
 
 /** Minutos que faltam até a sessão expirar (arredondado para cima; nunca negativo). */

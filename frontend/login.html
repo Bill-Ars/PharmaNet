@@ -18,14 +18,22 @@
         if (!tema) tema = matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
         document.documentElement.dataset.tema = tema;
       }
-      // Uma transição entre páginas interrompida (ex.: redirecção logo ao abrir) não é um erro.
+      // Transições entre páginas: uma transição interrompida não é um erro, e as redirecções
+      // automáticas (ex.: sem sessão → login) mudam de página sem transição.
       for (const momento of ['pageswap', 'pagereveal']) {
         addEventListener(momento, (evento) => {
+          let semTransicao = false;
+          try {
+            semTransicao = sessionStorage.getItem('farmarede-sem-transicao') === '1';
+            // O aviso só vale para uma mudança de página: a página nova apaga-o sempre.
+            if (momento === 'pagereveal') sessionStorage.removeItem('farmarede-sem-transicao');
+          } catch {}
           const transicao = evento.viewTransition;
           if (!transicao) return;
           for (const promessa of [transicao.ready, transicao.finished, transicao.updateCallbackDone]) {
             promessa?.catch(() => {});
           }
+          if (semTransicao) transicao.skipTransition();
         });
       }
     </script>
